@@ -219,4 +219,236 @@ router.get('/estadisticas', async (req, res) => {
   }
 });
 
+// POST /api/estudiantes/registro-completo - Nuevo registro con especialidades y horarios
+router.post('/registro-completo', async (req, res) => {
+  let connection;
+  
+  try {
+    const { 
+      // Datos básicos
+      nombre_completo, 
+      email, 
+      telefono, 
+      anio_carrera: año_carrera,
+      casos_necesarios,
+      ciudad,
+      
+      // Especialidades y horarios (array de objetos)
+      especialidades_horarios = []
+    } = req.body;
+
+    // Validaciones básicas
+    if (!nombre_completo || !email || !año_carrera) {
+      return res.status(400).json({
+        success: false,
+        message: 'Nombre completo, email y año de carrera son requeridos'
+      });
+    }
+
+    if (!especialidades_horarios || especialidades_horarios.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Debe especificar al menos una especialidad con su horario'
+      });
+    }
+
+    const db = await pool.getConnection();
+    connection = db;
+    
+    // Iniciar transacción
+    await connection.beginTransaction();
+
+    // 1. Crear estudiante básico
+    const codigo_estudiante = await generateUniqueStudentCode();
+    
+    const [estudianteResult] = await connection.execute(`
+      INSERT INTO estudiantes_odontologia (
+        codigo_estudiante, 
+        nombre_completo, 
+        año_carrera, 
+        telefono, 
+        email, 
+        ciudad, 
+        estado,
+        casos_necesarios,
+        casos_activos,
+        casos_completados,
+        fecha_registro
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+    `, [
+      codigo_estudiante,
+      nombre_completo,
+      año_carrera,
+      telefono || null,
+      email.toLowerCase().trim(),
+      ciudad,
+      'activo',
+      casos_necesarios || 10,
+      0,
+      0
+    ]);
+
+    const estudianteId = estudianteResult.insertId;
+
+    // 2. Insertar especialidades y horarios
+    for (const especialidad_horario of especialidades_horarios) {
+      const {
+        especialidad,
+        clinica,
+        dia_semana,
+        hora_inicio,
+        hora_fin,
+        capacidad_pacientes = 1
+      } = especialidad_horario;
+
+      // Validar datos de especialidad
+      if (!especialidad || !clinica || !dia_semana || !hora_inicio || !hora_fin) {
+        throw new Error(`Datos incompletos para especialidad: ${JSON.stringify(especialidad_horario)}`);
+      }
+
+      // Validar clínicas permitidas
+      const clinicasPermitidas = ['Clínica para el Niño y Adolescente', 'Clínica Integral Adulto y Gerontología'];
+      if (!clinicasPermitidas.includes(clinica)) {
+        throw new Error(`Clínica no válida: ${clinica}`);
+      }
+
+      // Validar días de la semana
+      const diasPermitidos = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+      if (!diasPermitidos.includes(dia_semana.toLowerCase())) {
+        throw new Error(`Día de la semana no válido: ${dia_semana}`);
+      }
+
+      // Verificar solapamientos de horarios para este estudiante
+      const [solapamientos] = await connection.execute(`
+        SELECT COUNT(*) as conflictos
+        FROM especialidades_estudiante 
+        WHERE id_estudiante = ? 
+          AND dia_semana = ? 
+          AND activo = TRUE
+          AND (
+            (hora_inicio <= ? AND hora_fin > ?) OR
+            (hora_inicio < ? AND hora_fin >= ?) OR
+            (hora_inicio >= ? AND hora_fin <= ?)
+          )
+      `, [
+        estudianteId, 
+        dia_semana.toLowerCase(),
+        hora_inicio, hora_inicio,  // Caso 1: nuevo empieza dentro de existente
+        hora_fin, hora_fin,        // Caso 2: nuevo termina dentro de existente  
+        hora_inicio, hora_fin      // Caso 3: nuevo contiene completamente a existente
+      ]);
+
+      if (solapamientos[0].conflictos > 0) {
+        throw new Error(`Conflicto de horarios: ${dia_semana} ${hora_inicio}-${hora_fin} se solapa con otro horario existente`);
+      }
+
+      // Insertar especialidad_horario
+      await connection.execute(`
+        INSERT INTO especialidades_estudiante (
+          id_estudiante,
+          especialidad,
+          clinica,
+          dia_semana,
+          hora_inicio,
+          hora_fin,
+          capacidad_pacientes,
+          activo,
+          fecha_creacion
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, TRUE, NOW())
+      `, [
+        estudianteId,
+        especialidad,
+        clinica,
+        dia_semana.toLowerCase(),
+        hora_inicio,
+        hora_fin,
+        capacidad_pacientes
+      ]);
+    }
+
+    // Confirmar transacción
+    await connection.commit();
+
+    // Obtener datos completos del estudiante creado
+    const [estudianteCompleto] = await connection.execute(`
+      SELECT 
+        e.*,
+        GROUP_CONCAT(
+          CONCAT(ee.especialidad, ' (', ee.clinica, ') - ', ee.dia_semana, ' ', ee.hora_inicio, '-', ee.hora_fin)
+          SEPARATOR '; '
+        ) as especialidades_detalle
+      FROM estudiantes_odontologia e
+      LEFT JOIN especialidades_estudiante ee ON e.id = ee.id_estudiante AND ee.activo = TRUE
+      WHERE e.id = ?
+      GROUP BY e.id
+    `, [estudianteId]);
+
+    res.status(201).json({
+      success: true,
+      message: 'Estudiante registrado exitosamente con especialidades y horarios',
+      data: {
+        estudiante: estudianteCompleto[0],
+        especialidades_registradas: especialidades_horarios.length,
+        codigo_estudiante: codigo_estudiante
+      }
+    });
+
+  } catch (error) {
+    // Revertir transacción en caso de error
+    if (connection) {
+      try {
+        await connection.rollback();
+      } catch (rollbackError) {
+        console.error('Error en rollback:', rollbackError);
+      }
+    }
+    
+    console.error('Error en registro completo:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error registrando estudiante: ' + error.message
+    });
+  } finally {
+    if (connection) {
+      connection.release();
+    }
+  }
+});
+
+// Función auxiliar para generar código único de estudiante
+async function generateUniqueStudentCode() {
+  const db = await pool.getConnection();
+  try {
+    let codigo;
+    let isUnique = false;
+    let attempts = 0;
+    const maxAttempts = 10;
+
+    while (!isUnique && attempts < maxAttempts) {
+      // Generar código: DENT + 6 dígitos aleatorios
+      const randomNum = Math.floor(Math.random() * 900000) + 100000;
+      codigo = `DENT${randomNum}`;
+
+      // Verificar si ya existe
+      const [existing] = await db.execute(
+        'SELECT id FROM estudiantes_odontologia WHERE codigo_estudiante = ?',
+        [codigo]
+      );
+
+      if (existing.length === 0) {
+        isUnique = true;
+      }
+      attempts++;
+    }
+
+    if (!isUnique) {
+      throw new Error('No se pudo generar un código único después de múltiples intentos');
+    }
+
+    return codigo;
+  } finally {
+    db.release();
+  }
+}
+
 module.exports = router;

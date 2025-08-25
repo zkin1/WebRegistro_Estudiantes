@@ -1,406 +1,499 @@
 /**
- * Validación del formulario de registro de estudiantes
+ * SISTEMA DENTAL MATCHING - VALIDACIONES
+ * Maneja todas las validaciones del formulario de registro
  */
 
 class FormValidator {
     constructor() {
-        this.form = document.getElementById('registrationForm');
-        this.submitBtn = document.getElementById('submitBtn');
-        this.errors = {};
-        this.init();
+        this.errors = new Map();
+        this.setupValidation();
     }
 
-    init() {
-        if (!this.form) {
-            console.error('Formulario no encontrado');
-            return;
-        }
-        this.setupEventListeners();
+    /**
+     * Configura las validaciones del formulario
+     */
+    setupValidation() {
+        // Validación en tiempo real para campos requeridos
         this.setupRealTimeValidation();
-        console.log('✅ FormValidator inicializado');
+        
+        // Validación de email
+        this.setupEmailValidation();
+        
+        // Validación de teléfono
+        this.setupPhoneValidation();
+        
+        // Validación de casos necesarios
+        this.setupCasesValidation();
     }
 
-    setupEventListeners() {
-        // Validación en tiempo real
-        this.form.addEventListener('input', (e) => {
-            this.validateField(e.target);
-        });
-
-        // Validación al cambiar selecciones
-        this.form.addEventListener('change', (e) => {
-            this.validateField(e.target);
-        });
-
-        // Validación al enviar
-        this.form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            console.log('📝 Submit del formulario detectado');
-            if (this.validateForm()) {
-                this.submitForm();
+    /**
+     * Configura validación en tiempo real para campos requeridos
+     */
+    setupRealTimeValidation() {
+        const requiredFields = ['nombre_completo', 'email', 'anio_carrera', 'ciudad'];
+        
+        requiredFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.addEventListener('blur', () => {
+                    this.validateRequiredField(field);
+                });
+                
+                field.addEventListener('input', () => {
+                    this.clearFieldError(field);
+                });
             }
         });
     }
 
-    setupRealTimeValidation() {
-        // Validación de email en tiempo real
+    /**
+     * Configura validación de email
+     */
+    setupEmailValidation() {
         const emailField = document.getElementById('email');
         if (emailField) {
-            let emailTimeout;
-
-            emailField.addEventListener('input', (e) => {
-                clearTimeout(emailTimeout);
-                const email = e.target.value.trim();
-                
-                // Solo verificar si el email es válido y no está vacío
-                if (email && this.isValidEmail(email)) {
-                    // Verificar si el email ya fue verificado recientemente
-                    if (emailField.dataset.lastVerified === email) {
-                        return; // Ya verificamos este email
-                    }
-                    
-                    emailTimeout = setTimeout(() => {
-                        this.checkEmailAvailability(email);
-                        // Marcar este email como verificado
-                        emailField.dataset.lastVerified = email;
-                    }, 500);
-                } else {
-                    this.clearEmailStatus();
-                    // Limpiar el marcador de verificación
-                    delete emailField.dataset.lastVerified;
-                }
+            emailField.addEventListener('blur', () => {
+                this.validateEmail(emailField);
+            });
+            
+            emailField.addEventListener('input', () => {
+                this.clearFieldError(emailField);
+                this.clearEmailStatus();
             });
         }
     }
 
-    validateField(field) {
-        const fieldName = field.name;
-        const value = field.value;
-        let isValid = true;
-        let errorMessage = '';
+    /**
+     * Configura validación de teléfono
+     */
+    setupPhoneValidation() {
+        const phoneField = document.getElementById('telefono');
+        if (phoneField) {
+            phoneField.addEventListener('input', (e) => {
+                this.formatPhoneNumber(e.target);
+            });
+            
+            phoneField.addEventListener('blur', () => {
+                this.validatePhone(phoneField);
+            });
+        }
+    }
 
-        // Limpiar error previo
+    /**
+     * Configura validación de casos necesarios
+     */
+    setupCasesValidation() {
+        const casesField = document.getElementById('casos_necesarios');
+        if (casesField) {
+            casesField.addEventListener('input', (e) => {
+                this.validateCasesInput(e.target);
+            });
+            
+            casesField.addEventListener('blur', () => {
+                this.validateCasesField(casesField);
+            });
+        }
+    }
+
+    /**
+     * Valida un campo requerido
+     */
+    validateRequiredField(field) {
+        const value = field.value.trim();
+        
+        if (!value) {
+            this.showFieldError(field, 'Este campo es requerido');
+            return false;
+        }
+        
         this.clearFieldError(field);
-
-        // Validaciones específicas según el tipo de campo
-        switch (fieldName) {
-            case 'nombre_completo':
-                isValid = this.validateNombre(value);
-                if (!isValid) errorMessage = 'El nombre debe tener entre 3 y 100 caracteres y solo letras';
-                break;
-
-            case 'email':
-                isValid = this.validateEmail(value);
-                if (!isValid) errorMessage = 'Ingresa un email válido';
-                break;
-
-            case 'telefono':
-                isValid = this.validateTelefono(value);
-                if (!isValid) errorMessage = 'El teléfono debe tener formato +56912345678';
-                break;
-
-            case 'ciudad':
-                isValid = this.validateCiudad(value);
-                if (!isValid) errorMessage = 'Selecciona una ciudad válida';
-                break;
-
-            case 'universidad':
-                isValid = this.validateUniversidad(value);
-                if (!isValid) errorMessage = 'La universidad debe tener máximo 100 caracteres';
-                break;
-
-            case 'anio_carrera':
-                isValid = this.validateAñoCarrera(value);
-                if (!isValid) errorMessage = 'Selecciona un año válido';
-                break;
-        }
-
-        // Solo mostrar errores visuales para campos críticos
-        if (!isValid && (fieldName === 'nombre_completo' || fieldName === 'email' || fieldName === 'anio_carrera' || fieldName === 'ciudad')) {
-            this.showFieldError(field, errorMessage);
-        }
-
-        // Actualizar estado de errores
-        if (isValid) {
-            delete this.errors[fieldName];
-        } else {
-            this.errors[fieldName] = errorMessage;
-        }
-
-        this.updateSubmitButton();
-        return isValid;
+        return true;
     }
 
-    validateForm() {
-        console.log('🔍 Validando formulario completo...');
-        let isValid = true;
-        const fields = this.form.querySelectorAll('input, select');
+    /**
+     * Valida formato de email
+     */
+    validateEmail(field) {
+        const value = field.value.trim();
         
-        // Validar campos requeridos específicamente
-        const requiredFields = [
-            'nombre_completo', 'email', 'anio_carrera', 'ciudad',
-            'especialidades', 'dias_disponibles', 'horarios_disponibles'
-        ];
-        
-        console.log('📋 Campos requeridos:', requiredFields);
-        
-        for (const fieldName of requiredFields) {
-            const field = this.form.querySelector(`[name="${fieldName}"]`);
-            if (!field) {
-                console.error(`❌ Campo no encontrado: ${fieldName}`);
-                continue;
-            }
-            
-            let fieldValid = true;
-            
-            if (fieldName === 'especialidades' || fieldName === 'dias_disponibles' || fieldName === 'horarios_disponibles') {
-                const checkboxes = this.form.querySelectorAll(`input[name="${fieldName}"]:checked`);
-                fieldValid = checkboxes.length > 0;
-                console.log(`🔍 ${fieldName}: ${checkboxes.length} seleccionados`, Array.from(checkboxes).map(cb => cb.value));
-            } else if (fieldName === 'anio_carrera') {
-                const radio = this.form.querySelector(`input[name="${fieldName}"]:checked`);
-                fieldValid = radio && ['4to', '5to'].includes(radio.value);
-                console.log(`🔍 ${fieldName}: ${radio ? radio.value : 'ninguno seleccionado'}`);
-            } else {
-                fieldValid = field.value.trim() !== '';
-                console.log(`🔍 ${fieldName}: "${field.value.trim()}"`);
-            }
-            
-            if (!fieldValid) {
-                console.error(`❌ Campo inválido: ${fieldName}`);
-                isValid = false;
-                this.showFieldError(field, `El campo ${fieldName} es requerido`);
-            }
+        if (!value) {
+            this.showFieldError(field, 'El email es requerido');
+            return false;
         }
         
-        // Validar campos individuales para mostrar errores específicos
-        fields.forEach(field => {
-            if (!this.validateField(field)) {
-                isValid = false;
-            }
-        });
-
-        console.log('📊 Resultado de validación:', { isValid, errors: this.errors });
-        return isValid;
+        if (!this.isValidEmailFormat(value)) {
+            this.showFieldError(field, 'Ingresa un email válido');
+            return false;
+        }
+        
+        // Verificar disponibilidad del email
+        this.checkEmailAvailability(value);
+        
+        this.clearFieldError(field);
+        return true;
     }
 
-    // Validaciones específicas
-    validateNombre(value) {
-        const trimmed = value.trim();
-        if (trimmed.length < 3 || trimmed.length > 100) return false;
-        
-        // Solo letras, espacios y acentos
-        const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
-        return regex.test(trimmed);
-    }
-
-    validateEmail(value) {
-        const trimmed = value.trim();
-        if (trimmed.length === 0) return false;
-        
+    /**
+     * Verifica si el formato del email es válido
+     */
+    isValidEmailFormat(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(trimmed);
+        return emailRegex.test(email);
     }
 
-    validateTelefono(value) {
-        const trimmed = value.trim();
-        if (trimmed.length === 0) return true; // Opcional
-        
-        const phoneRegex = /^\+569\d{8}$/;
-        return phoneRegex.test(trimmed);
-    }
-
-    validateCiudad(value) {
-        const validCities = ['Metropolitana', 'Valparaíso', 'Concepción', 'Otros'];
-        const isValid = validCities.includes(value);
-        console.log(`🔍 Validando ciudad: "${value}" - Válida: ${isValid}`);
-        return isValid;
-    }
-
-    validateUniversidad(value) {
-        const trimmed = value.trim();
-        if (trimmed.length === 0) return true; // Opcional
-        return trimmed.length <= 100;
-    }
-
-    validateAñoCarrera(value) {
-        const validYears = ['4to', '5to'];
-        const isValid = validYears.includes(value);
-        console.log(`🔍 Validando año de carrera: "${value}" - Válido: ${isValid}`);
-        return isValid;
-    }
-
-    // Verificación de disponibilidad de email
+    /**
+     * Verifica la disponibilidad del email
+     */
     async checkEmailAvailability(email) {
         const emailStatus = document.querySelector('.email-status');
-        const emailField = document.getElementById('email');
-        
-        if (!emailStatus || !emailField) return;
+        if (!emailStatus) return;
         
         try {
-            // Mostrar estado de verificación
-            emailStatus.textContent = 'Verificando disponibilidad...';
+            emailStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
             emailStatus.className = 'email-status checking';
             
-            // Hacer la petición a la API
             const response = await fetch(`http://localhost:5000/api/estudiantes/verificar-email/${encodeURIComponent(email)}`);
-            
-            if (!response.ok) {
-                throw new Error(`Error ${response.status}: ${response.statusText}`);
-            }
-            
             const data = await response.json();
             
-            if (data.success) {
-                if (data.disponible) {
-                    emailStatus.textContent = '✓ Email disponible';
-                    emailStatus.className = 'email-status available';
-                    // Limpiar cualquier error previo
-                    this.clearFieldError(emailField);
-                } else {
-                    emailStatus.textContent = '✗ Email ya registrado';
-                    emailStatus.className = 'email-status unavailable';
-                    this.showFieldError(emailField, 'Este email ya está registrado en el sistema');
-                }
+            if (data.success && data.disponible) {
+                emailStatus.innerHTML = '<i class="fas fa-check-circle"></i> Email disponible';
+                emailStatus.className = 'email-status available';
             } else {
-                emailStatus.textContent = 'Error verificando email';
+                emailStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> Email ya registrado';
                 emailStatus.className = 'email-status unavailable';
-                console.error('Error en respuesta de verificación:', data);
             }
         } catch (error) {
-            console.error('Error verificando email:', error);
-            emailStatus.textContent = 'Error de conexión';
-            emailStatus.className = 'email-status unavailable';
+            emailStatus.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error al verificar';
+            emailStatus.className = 'email-status error';
+        }
+    }
+
+    /**
+     * Formatea el número de teléfono
+     */
+    formatPhoneNumber(field) {
+        let value = field.value.replace(/\D/g, '');
+        
+        if (value.length > 0) {
+            if (value.startsWith('56')) {
+                value = '+' + value;
+            } else if (value.startsWith('9')) {
+                value = '+56' + value;
+            } else if (value.length === 9) {
+                value = '+56' + value;
+            }
+        }
+        
+        field.value = value;
+    }
+
+    /**
+     * Valida el campo de teléfono
+     */
+    validatePhone(field) {
+        const value = field.value.trim();
+        
+        if (value && !this.isValidPhoneFormat(value)) {
+            this.showFieldError(field, 'Ingresa un teléfono válido (ej: +56912345678)');
+            return false;
+        }
+        
+        this.clearFieldError(field);
+        return true;
+    }
+
+    /**
+     * Verifica si el formato del teléfono es válido
+     */
+    isValidPhoneFormat(phone) {
+        const phoneRegex = /^\+56[9][0-9]{8}$/;
+        return phoneRegex.test(phone);
+    }
+
+    /**
+     * Valida la entrada de casos necesarios
+     */
+    validateCasesInput(field) {
+        let value = parseInt(field.value);
+        
+        if (isNaN(value) || value < 1) {
+            field.value = 1;
+        } else if (value > 50) {
+            field.value = 50;
+        }
+    }
+
+    /**
+     * Valida el campo de casos necesarios
+     */
+    validateCasesField(field) {
+        const value = parseInt(field.value);
+        
+        if (isNaN(value) || value < 1 || value > 50) {
+            this.showFieldError(field, 'Debe ser un número entre 1 y 50');
+            return false;
+        }
+        
+        this.clearFieldError(field);
+        return true;
+    }
+
+    /**
+     * Valida el año de carrera
+     */
+    validateYear(field) {
+        const value = field.value;
+        
+        if (!value) {
+            this.showFieldError(field, 'Debes seleccionar tu año de carrera');
+            return false;
+        }
+        
+        if (!['4to', '5to'].includes(value)) {
+            this.showFieldError(field, 'Año de carrera no válido');
+            return false;
+        }
+        
+        this.clearFieldError(field);
+        return true;
+    }
+
+    /**
+     * Valida la ciudad
+     */
+    validateCity(field) {
+        const value = field.value;
+        
+        if (!value) {
+            this.showFieldError(field, 'Debes seleccionar una ciudad');
+            return false;
+        }
+        
+        const ciudadesValidas = ['Metropolitana', 'Valparaíso', 'Concepción'];
+        if (!ciudadesValidas.includes(value)) {
+            this.showFieldError(field, 'Ciudad no válida');
+            return false;
+        }
+        
+        this.clearFieldError(field);
+        return true;
+    }
+
+    /**
+     * Valida las especialidades seleccionadas
+     */
+    validateEspecialidades(especialidadesSeleccionadas) {
+        if (especialidadesSeleccionadas.size === 0) {
+            return {
+                isValid: false,
+                message: 'Debes seleccionar al menos una especialidad'
+            };
+        }
+        
+        return { isValid: true };
+    }
+
+    /**
+     * Valida los horarios configurados
+     */
+    validateHorarios(especialidadesConfiguradas) {
+        if (especialidadesConfiguradas.length === 0) {
+            return {
+                isValid: false,
+                message: 'Debes configurar al menos una especialidad con horarios'
+            };
+        }
+        
+        for (const esp of especialidadesConfiguradas) {
+            if (esp.horarios.length === 0) {
+                return {
+                    isValid: false,
+                    message: `La especialidad "${esp.especialidad}" debe tener al menos un horario`
+                };
+            }
             
-            // No mostrar error en el campo si es un error de conexión
-            // Solo mostrar en el estado del email
-        }
-    }
-
-    clearEmailStatus() {
-        const emailStatus = document.querySelector('.email-status');
-        const emailField = document.getElementById('email');
-        
-        if (emailStatus) {
-            emailStatus.textContent = '';
-            emailStatus.className = 'email-status';
+            for (const horario of esp.horarios) {
+                const horarioValidation = this.validateSingleHorario(horario);
+                if (!horarioValidation.isValid) {
+                    return {
+                        isValid: false,
+                        message: `Error en ${esp.especialidad}: ${horarioValidation.message}`
+                    };
+                }
+            }
         }
         
-        if (emailField) {
-            // Limpiar el marcador de verificación
-            delete emailField.dataset.lastVerified;
-            // Limpiar cualquier error del campo
-            this.clearFieldError(emailField);
-        }
+        return { isValid: true };
     }
 
-    // Manejo de errores
+    /**
+     * Valida un horario individual
+     */
+    validateSingleHorario(horario) {
+        // Validar campos requeridos
+        if (!horario.clinica || !horario.dia_semana || !horario.hora_inicio || !horario.hora_fin) {
+            return {
+                isValid: false,
+                message: 'Todos los campos del horario son requeridos'
+            };
+        }
+        
+        // Validar clínica
+        const clinicasValidas = ['Clínica para el Niño y Adolescente', 'Clínica Integral Adulto y Gerontología'];
+        if (!clinicasValidas.includes(horario.clinica)) {
+            return {
+                isValid: false,
+                message: 'Clínica no válida'
+            };
+        }
+        
+        // Validar día de la semana
+        const diasValidos = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+        if (!diasValidos.includes(horario.dia_semana.toLowerCase())) {
+            return {
+                isValid: false,
+                message: 'Día de la semana no válido'
+            };
+        }
+        
+        // Validar horarios
+        if (horario.hora_inicio >= horario.hora_fin) {
+            return {
+                isValid: false,
+                message: 'La hora de inicio debe ser anterior a la hora de fin'
+            };
+        }
+        
+        // Validar capacidad
+        if (horario.capacidad_pacientes < 1 || horario.capacidad_pacientes > 5) {
+            return {
+                isValid: false,
+                message: 'La capacidad debe ser entre 1 y 5 pacientes'
+            };
+        }
+        
+        return { isValid: true };
+    }
+
+    /**
+     * Valida el formulario completo
+     */
+    validateForm() {
+        this.errors.clear();
+        
+        // Validar datos básicos
+        const basicValidation = this.validateBasicData();
+        if (!basicValidation.isValid) {
+            return basicValidation;
+        }
+        
+        // Validar especialidades
+        const especialidadesValidation = this.validateEspecialidades(window.dentalSystem?.especialidadesSeleccionadas || new Set());
+        if (!especialidadesValidation.isValid) {
+            return especialidadesValidation;
+        }
+        
+        // Validar horarios
+        const horariosValidation = this.validateHorarios(window.dentalSystem?.especialidadesConfiguradas || []);
+        if (!horariosValidation.isValid) {
+            return horariosValidation;
+        }
+        
+        return { isValid: true };
+    }
+
+    /**
+     * Valida los datos básicos del formulario
+     */
+    validateBasicData() {
+        const fields = [
+            { id: 'nombre_completo', validator: this.validateRequiredField.bind(this) },
+            { id: 'email', validator: this.validateEmail.bind(this) },
+            { id: 'anio_carrera', validator: this.validateYear.bind(this) },
+            { id: 'ciudad', validator: this.validateCity.bind(this) },
+            { id: 'casos_necesarios', validator: this.validateCasesField.bind(this) }
+        ];
+        
+        for (const field of fields) {
+            const element = document.getElementById(field.id);
+            if (element && !field.validator(element)) {
+                return {
+                    isValid: false,
+                    message: `Error en el campo ${field.id}`
+                };
+            }
+        }
+        
+        return { isValid: true };
+    }
+
+    /**
+     * Muestra error en un campo
+     */
     showFieldError(field, message) {
         const errorSpan = field.parentNode.querySelector('.error-message');
         if (errorSpan) {
             errorSpan.textContent = message;
             field.classList.add('error');
         }
+        
+        this.errors.set(field.id, message);
     }
 
+    /**
+     * Limpia error de un campo
+     */
     clearFieldError(field) {
         const errorSpan = field.parentNode.querySelector('.error-message');
         if (errorSpan) {
             errorSpan.textContent = '';
             field.classList.remove('error');
         }
+        
+        this.errors.delete(field.id);
     }
 
-    // Estado del botón de envío
-    updateSubmitButton() {
-        const hasErrors = Object.keys(this.errors).length > 0;
-        const requiredFields = this.form.querySelectorAll('[required]');
-        let allRequiredFilled = true;
-
-        requiredFields.forEach(field => {
-            if (field.type === 'checkbox' || field.type === 'radio') {
-                const name = field.name;
-                const checked = this.form.querySelectorAll(`input[name="${name}"]:checked`);
-                if (checked.length === 0) allRequiredFilled = false;
-            } else {
-                if (!field.value.trim()) allRequiredFilled = false;
-            }
-        });
-
-        this.submitBtn.disabled = hasErrors || !allRequiredFilled;
-        
-        if (this.submitBtn.disabled) {
-            this.submitBtn.style.opacity = '0.6';
-            this.submitBtn.style.cursor = 'not-allowed';
-        } else {
-            this.submitBtn.style.opacity = '1';
-            this.submitBtn.style.cursor = 'pointer';
+    /**
+     * Limpia el estado del email
+     */
+    clearEmailStatus() {
+        const emailStatus = document.querySelector('.email-status');
+        if (emailStatus) {
+            emailStatus.innerHTML = '';
+            emailStatus.className = 'email-status';
         }
     }
 
-    // Envío del formulario
-    submitForm() {
-        if (this.submitBtn.disabled) return;
-
-        console.log('🚀 Enviando formulario...');
-        
-        const formData = new FormData(this.form);
-        const data = {};
-
-        // Procesar datos del formulario
-        for (let [key, value] of formData.entries()) {
-            if (key === 'especialidades' || key === 'dias_disponibles' || key === 'horarios_disponibles') {
-                if (!data[key]) data[key] = [];
-                data[key].push(value);
-            } else {
-                data[key] = value;
-            }
-        }
-
-        console.log('📋 Datos procesados del formulario:', data);
-        console.log('🔍 Verificando estructura de datos:');
-        console.log('  - nombre_completo:', data.nombre_completo);
-        console.log('  - email:', data.email);
-        console.log('  - anio_carrera:', data.anio_carrera);
-        console.log('  - ciudad:', data.ciudad);
-        console.log('  - especialidades:', data.especialidades);
-        console.log('  - dias_disponibles:', data.dias_disponibles);
-        console.log('  - horarios_disponibles:', data.horarios_disponibles);
-        console.log('  - telefono:', data.telefono);
-        console.log('  - universidad:', data.universidad);
-
-        // Emitir evento para que api.js maneje el envío
-        const submitEvent = new CustomEvent('formSubmit', {
-            detail: { formData: data }
-        });
-        document.dispatchEvent(submitEvent);
-        
-        console.log('📤 Evento formSubmit emitido');
-    }
-
-    // Métodos públicos para uso externo
+    /**
+     * Obtiene todos los errores actuales
+     */
     getErrors() {
-        return this.errors;
+        return Array.from(this.errors.values());
     }
 
+    /**
+     * Verifica si hay errores
+     */
     hasErrors() {
-        return Object.keys(this.errors).length > 0;
+        return this.errors.size > 0;
     }
 
+    /**
+     * Limpia todos los errores
+     */
     clearAllErrors() {
-        this.errors = {};
-        const errorSpans = this.form.querySelectorAll('.error-message');
-        const errorFields = this.form.querySelectorAll('.error');
-        
-        errorSpans.forEach(span => span.textContent = '');
-        errorFields.forEach(field => field.classList.remove('error'));
-        
-        this.updateSubmitButton();
+        this.errors.clear();
+        document.querySelectorAll('.error-message').forEach(span => {
+            span.textContent = '';
+        });
+        document.querySelectorAll('.error').forEach(field => {
+            field.classList.remove('error');
+        });
     }
 }
 
 // Inicializar validador cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Inicializando FormValidator...');
     window.formValidator = new FormValidator();
 });
 

@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Estudiantes de Odontología - Sistema de Matching Dental</title>
+    <title>Registro de Estudiantes - Sistema Dental Matching</title>
     <meta name="description" content="Regístrate como estudiante de odontología para participar en el sistema de matching con pacientes">
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- CSS -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style-new.css">
     <link rel="stylesheet" href="css/responsive.css">
     
     <!-- Favicon -->
@@ -47,7 +47,7 @@
                     </h1>
                     <p class="hero-description">
                         Como estudiante de odontología, conéctate con pacientes que necesitan atención dental. 
-                        Completa tu perfil y comienza a recibir casos clínicos que se ajusten a tu especialidad y disponibilidad.
+                        Completa tu perfil con especialidades específicas y horarios detallados para un matching perfecto.
                     </p>
                     <div class="hero-features">
                         <div class="feature">
@@ -86,196 +86,483 @@
             </div>
             
             <form id="registrationForm" class="registration-form">
-                <!-- Información Personal -->
-                <div class="form-section">
-                    <h3><i class="fas fa-user"></i> Información Personal</h3>
-                    
-                    <div class="form-group">
-                        <label for="nombre_completo">Nombre Completo *</label>
-                        <input type="text" id="nombre_completo" name="nombre_completo" required>
-                        <span class="error-message"></span>
+                <!-- SECCIÓN 1: DATOS BÁSICOS -->
+                <div class="form-section" id="datosBasicos">
+                    <div class="section-header-inline">
+                        <h3><i class="fas fa-user"></i> Datos Básicos</h3>
+                        <div class="section-progress">
+                            <span class="progress-text">Paso 1 de 2</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 50%"></div>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="email">Email *</label>
-                        <input type="email" id="email" name="email" required>
-                        <span class="error-message"></span>
-                        <div class="email-status"></div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nombre_completo">Nombre Completo *</label>
+                            <input type="text" id="nombre_completo" name="nombre_completo" required>
+                            <span class="error-message"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Institucional *</label>
+                            <input type="email" id="email" name="email" required>
+                            <span class="error-message"></span>
+                            <div class="email-status"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="telefono">Teléfono</label>
+                            <input type="tel" id="telefono" name="telefono" placeholder="+56912345678">
+                            <span class="error-message"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="anio_carrera">Año de Carrera *</label>
+                            <select id="anio_carrera" name="anio_carrera" required>
+                                <option value="">Selecciona tu año</option>
+                                <option value="4to">4to Año</option>
+                                <option value="5to">5to Año</option>
+                            </select>
+                            <span class="error-message"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="casos_necesarios">Casos Necesarios este Semestre</label>
+                            <input type="number" id="casos_necesarios" name="casos_necesarios" min="1" max="50" value="10">
+                            <span class="error-message"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="ciudad">Ciudad de Residencia *</label>
+                            <select id="ciudad" name="ciudad" required>
+                                <option value="">Selecciona una ciudad</option>
+                                <option value="Metropolitana">Metropolitana</option>
+                                <option value="Valparaíso">Valparaíso</option>
+                                <option value="Concepción">Concepción</option>
+                            </select>
+                            <span class="error-message"></span>
+                        </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="telefono">Teléfono (Opcional)</label>
-                        <input type="tel" id="telefono" name="telefono" placeholder="+56912345678">
-                        <span class="error-message"></span>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="ciudad">Ciudad de Residencia *</label>
-                        <select id="ciudad" name="ciudad" required>
-                            <option value="">Selecciona una ciudad</option>
-                            <option value="Metropolitana">Metropolitana</option>
-                            <option value="Valparaíso">Valparaíso</option>
-                            <option value="Concepción">Concepción</option>
-                            <option value="Otros">Otros</option>
-                        </select>
-                        <span class="error-message"></span>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-primary" id="nextToEspecialidades">
+                            Continuar a Especialidades <i class="fas fa-arrow-right"></i>
+                        </button>
                     </div>
                 </div>
 
-                <!-- Información Académica -->
-                <div class="form-section">
-                    <h3><i class="fas fa-graduation-cap"></i> Información Académica</h3>
-                    
-                    <div class="form-group">
-                        <label for="universidad">Universidad (Opcional)</label>
-                        <select id="universidad" name="universidad">
-                            <option value="">Selecciona tu universidad</option>
-                            <option value="Universidad de Chile">Universidad de Chile</option>
-                            <option value="Universidad de Valparaíso">Universidad de Valparaíso</option>
-                            <option value="Universidad de Concepción">Universidad de Concepción</option>
-                        </select>
-                        <span class="error-message"></span>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Año de Carrera *</label>
-                        <div class="radio-group">
-                            <label class="radio-label">
-                                <input type="radio" name="anio_carrera" value="4to" required>
-                                <span class="radio-custom"></span>
-                                4to Año
-                            </label>
-                            <label class="radio-label">
-                                <input type="radio" name="anio_carrera" value="5to" required>
-                                <span class="radio-custom"></span>
-                                5to Año
-                            </label>
+                <!-- SECCIÓN 2: ESPECIALIDADES Y HORARIOS - NUEVA INTERFAZ -->
+                <div class="form-section hidden" id="especialidadesHorarios">
+                    <div class="section-header-inline">
+                        <h3><i class="fas fa-stethoscope"></i> Especialidades y Disponibilidad</h3>
+                        <div class="section-progress">
+                            <span class="progress-text">Paso 2 de 2</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
                         </div>
-                        <span class="error-message"></span>
                     </div>
                     
-                    <div class="form-group">
-                        <label>Especialidades *</label>
-                        <div class="checkbox-grid">
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="especialidades" value="Endodoncia">
-                                <span class="checkbox-custom"></span>
-                                Endodoncia
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="especialidades" value="Resina Simple">
-                                <span class="checkbox-custom"></span>
-                                Resina Simple
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="especialidades" value="Resina Compuesta">
-                                <span class="checkbox-custom"></span>
-                                Resina Compuesta
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="especialidades" value="Corona">
-                                <span class="checkbox-custom"></span>
-                                Corona
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="especialidades" value="Exodoncia Simple">
-                                <span class="checkbox-custom"></span>
-                                Exodoncia Simple
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="especialidades" value="Incrustación">
-                                <span class="checkbox-custom"></span>
-                                Incrustación
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="especialidades" value="Prótesis">
-                                <span class="checkbox-custom"></span>
-                                Prótesis
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="especialidades" value="Destartraje">
-                                <span class="checkbox-custom"></span>
-                                Destartraje
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="especialidades" value="Pulido Radicular">
-                                <span class="checkbox-custom"></span>
-                                Pulido Radicular
-                            </label>
+                    <!-- Wizard Steps -->
+                    <div class="wizard-steps">
+                        <div class="wizard-step active" data-step="especialidades">
+                            <div class="step-number">1</div>
+                            <div class="step-info">
+                                <h4>Especialidades</h4>
+                                <p>Elige tus áreas</p>
+                            </div>
                         </div>
-                        <span class="error-message"></span>
+                        <div class="wizard-step" data-step="horarios">
+                            <div class="step-number">2</div>
+                            <div class="step-info">
+                                <h4>Horarios</h4>
+                                <p>Configura tu agenda</p>
+                            </div>
+                        </div>
+                        <div class="wizard-step" data-step="resumen">
+                            <div class="step-number">3</div>
+                            <div class="step-info">
+                                <h4>Resumen</h4>
+                                <p>Revisa y confirma</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Disponibilidad -->
-                <div class="form-section">
-                    <h3><i class="fas fa-calendar-alt"></i> Disponibilidad</h3>
-                    
-                    <div class="form-group">
-                        <label>Días Disponibles *</label>
-                        <div class="checkbox-grid">
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="dias_disponibles" value="Lunes">
-                                <span class="checkbox-custom"></span>
-                                Lunes
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="dias_disponibles" value="Martes">
-                                <span class="checkbox-custom"></span>
-                                Martes
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="dias_disponibles" value="Miércoles">
-                                <span class="checkbox-custom"></span>
-                                Miércoles
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="dias_disponibles" value="Jueves">
-                                <span class="checkbox-custom"></span>
-                                Jueves
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="dias_disponibles" value="Viernes">
-                                <span class="checkbox-custom"></span>
-                                Viernes
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="dias_disponibles" value="Sábado">
-                                <span class="checkbox-custom"></span>
-                                Sábado
-                            </label>
+                    <!-- PASO 2A: SELECCIÓN DE ESPECIALIDADES -->
+                    <div class="wizard-content" id="wizardEspecialidades">
+                        <div class="especialidades-intro">
+                            <h4><i class="fas fa-star"></i> ¿En qué especialidades te sientes cómodo(a)?</h4>
+                            <p>Selecciona todas las especialidades que puedes realizar con confianza. Puedes elegir múltiples opciones.</p>
                         </div>
-                        <span class="error-message"></span>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Horarios Disponibles *</label>
-                        <div class="checkbox-grid">
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="horarios_disponibles" value="Manana">
-                                <span class="checkbox-custom"></span>
-                                Mañana (8:00 AM - 12:00 PM)
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="horarios_disponibles" value="Tarde">
-                                <span class="checkbox-custom"></span>
-                                Tarde (12:00 PM - 8:00 PM)
-                            </label>
-                        </div>
-                        <span class="error-message"></span>
-                    </div>
-                </div>
+                        
+                        <div class="especialidades-cards">
+                            <div class="especialidad-card" data-especialidad="Endodoncia">
+                                <div class="card-icon">
+                                    <i class="fas fa-tooth"></i>
+                                </div>
+                                <h5>Endodoncia</h5>
+                                <p>Tratamiento de conductos radiculares</p>
+                                <div class="card-selection">
+                                    <input type="checkbox" id="esp-endodoncia" value="Endodoncia">
+                                    <label for="esp-endodoncia" class="card-checkbox">
+                                        <i class="fas fa-check"></i>
+                                    </label>
+                                </div>
+                            </div>
 
-                <!-- Submit Button -->
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary btn-large" id="submitBtn">
-                        <i class="fas fa-paper-plane"></i>
-                        Completar Registro
-                    </button>
+                            <div class="especialidad-card" data-especialidad="Operatoria Dental">
+                                <div class="card-icon">
+                                    <i class="fas fa-fill-drip"></i>
+                                </div>
+                                <h5>Operatoria Dental</h5>
+                                <p>Resinas y restauraciones dentales</p>
+                                <div class="card-selection">
+                                    <input type="checkbox" id="esp-operatoria" value="Operatoria Dental">
+                                    <label for="esp-operatoria" class="card-checkbox">
+                                        <i class="fas fa-check"></i>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="especialidad-card" data-especialidad="Periodoncia">
+                                <div class="card-icon">
+                                    <i class="fas fa-grin"></i>
+                                </div>
+                                <h5>Periodoncia</h5>
+                                <p>Tratamiento de encías y periodonto</p>
+                                <div class="card-selection">
+                                    <input type="checkbox" id="esp-periodoncia" value="Periodoncia">
+                                    <label for="esp-periodoncia" class="card-checkbox">
+                                        <i class="fas fa-check"></i>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="especialidad-card" data-especialidad="Cirugía Oral">
+                                <div class="card-icon">
+                                    <i class="fas fa-cut"></i>
+                                </div>
+                                <h5>Cirugía Oral</h5>
+                                <p>Extracciones y cirugías menores</p>
+                                <div class="card-selection">
+                                    <input type="checkbox" id="esp-cirugia" value="Cirugía Oral">
+                                    <label for="esp-cirugia" class="card-checkbox">
+                                        <i class="fas fa-check"></i>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="especialidad-card" data-especialidad="Prótesis Fija">
+                                <div class="card-icon">
+                                    <i class="fas fa-crown"></i>
+                                </div>
+                                <h5>Prótesis Fija</h5>
+                                <p>Coronas, puentes y carillas</p>
+                                <div class="card-selection">
+                                    <input type="checkbox" id="esp-protesis-fija" value="Prótesis Fija">
+                                    <label for="esp-protesis-fija" class="card-checkbox">
+                                        <i class="fas fa-check"></i>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="especialidad-card" data-especialidad="Prótesis Removible">
+                                <div class="card-icon">
+                                    <i class="fas fa-smile"></i>
+                                </div>
+                                <h5>Prótesis Removible</h5>
+                                <p>Dentaduras parciales y completas</p>
+                                <div class="card-selection">
+                                    <input type="checkbox" id="esp-protesis-removible" value="Prótesis Removible">
+                                    <label for="esp-protesis-removible" class="card-checkbox">
+                                        <i class="fas fa-check"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="especialidades-selected">
+                            <h5><i class="fas fa-list-check"></i> Especialidades seleccionadas:</h5>
+                            <div id="selectedEspecialidades" class="selected-tags">
+                                <div class="no-selection">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Selecciona al menos una especialidad para continuar</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wizard-navigation">
+                            <button type="button" class="btn btn-secondary" id="backToDatos">
+                                <i class="fas fa-arrow-left"></i> Volver a Datos
+                            </button>
+                            <button type="button" class="btn btn-primary" id="nextToHorarios" disabled>
+                                Configurar Horarios <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PASO 2B: CONFIGURACIÓN DE HORARIOS -->
+                    <div class="wizard-content hidden" id="wizardHorarios">
+                        <div class="horarios-intro">
+                            <h4><i class="fas fa-calendar-week"></i> ¿Cuál es tu disponibilidad semanal?</h4>
+                            <p>Configura tus horarios para cada especialidad. Puedes elegir períodos predefinidos o personalizar tus horarios.</p>
+                        </div>
+
+                        <!-- Selector de Especialidad Activa -->
+                        <div class="especialidad-tabs">
+                            <div class="tabs-container" id="especialidadTabs">
+                                <!-- Tabs se generan dinámicamente -->
+                            </div>
+                        </div>
+
+                        <!-- Calendario Semanal -->
+                        <div class="calendario-semanal" id="calendarioContainer">
+                            <div class="calendario-header">
+                                <h5 id="especialidadActiva">
+                                    <i class="fas fa-stethoscope"></i>
+                                    <span>Selecciona una especialidad arriba</span>
+                                </h5>
+                                <div class="clinica-selector">
+                                    <label><i class="fas fa-hospital"></i> Clínica:</label>
+                                    <select id="clinicaActual">
+                                        <option value="Clínica para el Niño y Adolescente">Niño y Adolescente</option>
+                                        <option value="Clínica Integral Adulto y Gerontología">Adulto y Gerontología</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="calendario-grid" id="calendarioGrid">
+                                <!-- Encabezados de días -->
+                                <div class="dia-header"></div>
+                                <div class="dia-header">
+                                    <i class="fas fa-calendar-day"></i>
+                                    <span>Lunes</span>
+                                </div>
+                                <div class="dia-header">
+                                    <i class="fas fa-calendar-day"></i>
+                                    <span>Martes</span>
+                                </div>
+                                <div class="dia-header">
+                                    <i class="fas fa-calendar-day"></i>
+                                    <span>Miércoles</span>
+                                </div>
+                                <div class="dia-header">
+                                    <i class="fas fa-calendar-day"></i>
+                                    <span>Jueves</span>
+                                </div>
+                                <div class="dia-header">
+                                    <i class="fas fa-calendar-day"></i>
+                                    <span>Viernes</span>
+                                </div>
+                                <div class="dia-header">
+                                    <i class="fas fa-calendar-day"></i>
+                                    <span>Sábado</span>
+                                </div>
+
+                                <!-- Mañana -->
+                                <div class="periodo-label">
+                                    <i class="fas fa-sun"></i>
+                                    <div>
+                                        <strong>Mañana</strong><br>
+                                        <span>08:00 - 13:00</span>
+                                    </div>
+                                </div>
+                                <div class="time-slot" data-dia="lunes" data-periodo="mañana" data-inicio="08:00" data-fin="13:00">
+                                    <div class="slot-content">
+                                        <i class="fas fa-plus"></i>
+                                        <span>Disponible</span>
+                                    </div>
+                                </div>
+                                <div class="time-slot" data-dia="martes" data-periodo="mañana" data-inicio="08:00" data-fin="13:00">
+                                    <div class="slot-content">
+                                        <i class="fas fa-plus"></i>
+                                        <span>Disponible</span>
+                                    </div>
+                                </div>
+                                <div class="time-slot" data-dia="miercoles" data-periodo="mañana" data-inicio="08:00" data-fin="13:00">
+                                    <div class="slot-content">
+                                        <i class="fas fa-plus"></i>
+                                        <span>Disponible</span>
+                                    </div>
+                                </div>
+                                <div class="time-slot" data-dia="jueves" data-periodo="mañana" data-inicio="08:00" data-fin="13:00">
+                                    <div class="slot-content">
+                                        <i class="fas fa-plus"></i>
+                                        <span>Disponible</span>
+                                    </div>
+                                </div>
+                                <div class="time-slot" data-dia="viernes" data-periodo="mañana" data-inicio="08:00" data-fin="13:00">
+                                    <div class="slot-content">
+                                        <i class="fas fa-plus"></i>
+                                        <span>Disponible</span>
+                                    </div>
+                                </div>
+                                <div class="time-slot" data-dia="sabado" data-periodo="mañana" data-inicio="08:00" data-fin="13:00">
+                                    <div class="slot-content">
+                                        <i class="fas fa-plus"></i>
+                                        <span>Disponible</span>
+                                    </div>
+                                </div>
+
+                                <!-- Tarde -->
+                                <div class="periodo-label">
+                                    <i class="fas fa-moon"></i>
+                                    <div>
+                                        <strong>Tarde</strong><br>
+                                        <span>14:00 - 19:00</span>
+                                    </div>
+                                </div>
+                                <div class="time-slot" data-dia="lunes" data-periodo="tarde" data-inicio="14:00" data-fin="19:00">
+                                    <div class="slot-content">
+                                        <i class="fas fa-plus"></i>
+                                        <span>Disponible</span>
+                                    </div>
+                                </div>
+                                <div class="time-slot" data-dia="martes" data-periodo="tarde" data-inicio="14:00" data-fin="19:00">
+                                    <div class="slot-content">
+                                        <i class="fas fa-plus"></i>
+                                        <span>Disponible</span>
+                                    </div>
+                                </div>
+                                <div class="time-slot" data-dia="miercoles" data-periodo="tarde" data-inicio="14:00" data-fin="19:00">
+                                    <div class="slot-content">
+                                        <i class="fas fa-plus"></i>
+                                        <span>Disponible</span>
+                                    </div>
+                                </div>
+                                <div class="time-slot" data-dia="jueves" data-periodo="tarde" data-inicio="14:00" data-fin="19:00">
+                                    <div class="slot-content">
+                                        <i class="fas fa-plus"></i>
+                                        <span>Disponible</span>
+                                    </div>
+                                </div>
+                                <div class="time-slot" data-dia="viernes" data-periodo="tarde" data-inicio="14:00" data-fin="19:00">
+                                    <div class="slot-content">
+                                        <i class="fas fa-plus"></i>
+                                        <span>Disponible</span>
+                                    </div>
+                                </div>
+                                <div class="time-slot" data-dia="sabado" data-periodo="tarde" data-inicio="14:00" data-fin="19:00">
+                                    <div class="slot-content">
+                                        <i class="fas fa-plus"></i>
+                                        <span>Disponible</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Horarios configurados para la especialidad actual -->
+                            <div class="horarios-configurados" id="horariosConfigurados">
+                                <h6><i class="fas fa-clock"></i> Horarios configurados para esta especialidad:</h6>
+                                <div class="horarios-list" id="horariosList">
+                                    <div class="no-horarios">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span>Haz clic en los períodos de arriba para configurar tu disponibilidad</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wizard-navigation">
+                            <button type="button" class="btn btn-secondary" id="backToEspecialidades">
+                                <i class="fas fa-arrow-left"></i> Volver a Especialidades
+                            </button>
+                            <button type="button" class="btn btn-primary" id="nextToResumen" disabled>
+                                Ver Resumen <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PASO 2C: RESUMEN Y CONFIRMACIÓN -->
+                    <div class="wizard-content hidden" id="wizardResumen">
+                        <div class="resumen-intro">
+                            <h4><i class="fas fa-clipboard-check"></i> Revisa tu información</h4>
+                            <p>Confirma que todos los datos estén correctos antes de enviar tu registro.</p>
+                        </div>
+
+                        <div class="resumen-content">
+                            <div class="resumen-section">
+                                <h5><i class="fas fa-user"></i> Datos Básicos</h5>
+                                <div class="resumen-datos" id="resumenDatos">
+                                    <!-- Se llena dinámicamente -->
+                                </div>
+                            </div>
+
+                            <div class="resumen-section">
+                                <h5><i class="fas fa-stethoscope"></i> Especialidades Seleccionadas</h5>
+                                <div class="resumen-especialidades" id="resumenEspecialidades">
+                                    <!-- Se llena dinámicamente -->
+                                </div>
+                            </div>
+
+                            <div class="resumen-section">
+                                <h5><i class="fas fa-calendar"></i> Horarios Configurados</h5>
+                                <div class="resumen-horarios" id="resumenHorarios">
+                                    <!-- Se llena dinámicamente -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wizard-navigation">
+                            <button type="button" class="btn btn-secondary" id="backToHorarios">
+                                <i class="fas fa-arrow-left"></i> Volver a Horarios
+                            </button>
+                            <button type="submit" class="btn btn-primary btn-large" id="submitBtn">
+                                <i class="fas fa-paper-plane"></i> Completar Registro
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
     </section>
+
+    <!-- Modal para configurar horario personalizado -->
+    <div id="timeSlotModal" class="time-modal">
+        <div class="modal-content-time">
+            <div class="modal-header-time">
+                <h4><i class="fas fa-clock"></i> Configurar Horario Personalizado</h4>
+                <button type="button" class="close-modal" onclick="closeTimeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body-time">
+                <div class="modal-info">
+                    <p><strong id="modalDiaEspecialidad">Día y Especialidad</strong></p>
+                    <p id="modalClinica">Clínica</p>
+                </div>
+                <div class="time-config">
+                    <div class="time-field">
+                        <label><i class="fas fa-clock"></i> Hora inicio:</label>
+                        <input type="time" id="customHoraInicio" value="08:00">
+                    </div>
+                    <div class="time-field">
+                        <label><i class="fas fa-clock"></i> Hora fin:</label>
+                        <input type="time" id="customHoraFin" value="12:00">
+                    </div>
+                    <div class="time-field">
+                        <label><i class="fas fa-users"></i> Capacidad:</label>
+                        <select id="customCapacidad">
+                            <option value="1">1 paciente</option>
+                            <option value="2">2 pacientes</option>
+                            <option value="3">3 pacientes</option>
+                            <option value="4">4 pacientes</option>
+                            <option value="5">5 pacientes</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer-time">
+                <button type="button" class="btn btn-secondary" onclick="closeTimeModal()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btn-primary" onclick="saveTimeSlot()">
+                    <i class="fas fa-save"></i> Guardar Horario
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Information Section -->
     <section id="informacion" class="information">
@@ -291,7 +578,7 @@
                         <i class="fas fa-user-plus"></i>
                     </div>
                     <h3>1. Registro</h3>
-                    <p>Completa tu perfil con información académica y disponibilidad</p>
+                    <p>Completa tu perfil con información académica y disponibilidad detallada</p>
                 </div>
                 
                 <div class="step">
@@ -397,6 +684,6 @@
     <!-- JavaScript -->
     <script src="js/validation.js"></script>
     <script src="js/api.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/main-new.js"></script>
 </body>
 </html>

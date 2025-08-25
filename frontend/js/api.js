@@ -1,372 +1,204 @@
 /**
- * Manejo de la API para el registro de estudiantes
+ * SISTEMA DENTAL MATCHING - API CLIENT
+ * Maneja todas las comunicaciones con el backend
  */
 
-class StudentAPI {
+class APIClient {
     constructor() {
-        this.baseURL = 'http://localhost:5000/api';
+        // Configurar la URL del backend
+        this.baseURL = 'http://localhost:5000';
         this.endpoints = {
-            estudiantes: `${this.baseURL}/estudiantes`,
-            verificarEmail: `${this.baseURL}/estudiantes/verificar-email`,
-            estadisticas: `${this.baseURL}/estudiantes/estadisticas`
+            registroCompleto: '/api/estudiantes/registro-completo',
+            verificarEmail: '/api/estudiantes/verificar-email',
+            estadisticas: '/api/estudiantes/estadisticas'
         };
-        this.init();
-    }
-
-    init() {
-        this.setupEventListeners();
-        this.log('API inicializada', this.endpoints);
-    }
-
-    setupEventListeners() {
-        // Escuchar el evento de envío del formulario
-        document.addEventListener('formSubmit', (e) => {
-            this.log('Evento formSubmit recibido', e.detail);
-            this.handleFormSubmission(e.detail.formData);
-        });
-
-        // También escuchar el submit directo del formulario como respaldo
-        const form = document.getElementById('registrationForm');
-        if (form) {
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.log('Submit directo del formulario detectado');
-                this.handleDirectFormSubmit();
-            });
-        }
     }
 
     /**
-     * Maneja el envío directo del formulario (respaldo)
+     * Realiza una petición HTTP genérica
      */
-    handleDirectFormSubmit() {
-        const form = document.getElementById('registrationForm');
-        if (!form) {
-            this.log('Formulario no encontrado');
-            return;
-        }
-
-        const formData = new FormData(form);
-        const data = {};
-
-        // Procesar datos del formulario
-        for (let [key, value] of formData.entries()) {
-            if (key === 'especialidades' || key === 'dias_disponibles' || key === 'horarios_disponibles') {
-                if (!data[key]) data[key] = [];
-                data[key].push(value);
-            } else {
-                data[key] = value;
-            }
-        }
-
-        this.log('Datos del formulario procesados', data);
-        this.handleFormSubmission(data);
-    }
-
-    /**
-     * Maneja el envío del formulario
-     */
-    async handleFormSubmission(formData) {
-        try {
-            this.log('Iniciando envío del formulario', formData);
-            
-            // Mostrar loading
-            this.showLoading();
-            
-            // Validar datos antes del envío
-            if (!this.validateFormData(formData)) {
-                this.hideLoading();
-                this.log('Datos del formulario no válidos, no se envía a la API');
-                return;
-            }
-
-            this.log('Datos validados correctamente, enviando a la API...');
-
-            // Enviar datos a la API
-            const response = await this.registerStudent(formData);
-            
-            if (response.success) {
-                this.log('Registro exitoso', response.data);
-                this.showSuccess(response.data);
-                this.resetForm();
-            } else {
-                this.log('Error en la respuesta de la API', response.message);
-                // Solo mostrar errores críticos
-                if (response.message && !response.message.includes('ya está registrado')) {
-                    this.showError(response.message);
-                }
-            }
-
-        } catch (error) {
-            this.log('Error durante el registro', error);
-            // Solo mostrar errores de conexión
-            if (error.message.includes('fetch') || error.message.includes('Failed to fetch')) {
-                this.showError('Error de conexión. Verifica que el servidor esté funcionando.');
-            }
-        } finally {
-            this.hideLoading();
-        }
-    }
-
-    /**
-     * Valida los datos del formulario antes del envío
-     */
-    validateFormData(data) {
-        this.log('Validando datos del formulario', data);
+    async request(endpoint, options = {}) {
+        const url = `${this.baseURL}${endpoint}`;
         
-        const required = [
-            'nombre_completo', 'email', 'anio_carrera', 'ciudad',
-            'especialidades', 'dias_disponibles', 'horarios_disponibles'
-        ];
+        const defaultOptions = {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            ...options
+        };
 
-        // Verificar campos requeridos
-        for (const field of required) {
-            if (!data[field] || 
-                (Array.isArray(data[field]) && data[field].length === 0) ||
-                (typeof data[field] === 'string' && data[field].trim() === '')) {
-                this.log(`Campo requerido faltante o vacío: ${field}`, data[field]);
-                return false;
-            }
-        }
-
-        // Validar arrays
-        if (!Array.isArray(data.especialidades) || data.especialidades.length === 0) {
-            this.log('Especialidades no válidas', data.especialidades);
-            return false;
-        }
-        if (!Array.isArray(data.dias_disponibles) || data.dias_disponibles.length === 0) {
-            this.log('Días disponibles no válidos', data.dias_disponibles);
-            return false;
-        }
-        if (!Array.isArray(data.horarios_disponibles) || data.horarios_disponibles.length === 0) {
-            this.log('Horarios disponibles no válidos', data.horarios_disponibles);
-            return false;
-        }
-
-        this.log('Validación exitosa');
-        return true;
-    }
-
-    /**
-     * Registra un nuevo estudiante
-     */
-    async registerStudent(studentData) {
         try {
-            this.log('Enviando datos a la API', {
-                url: this.endpoints.estudiantes,
-                data: studentData
-            });
-
-            const response = await fetch(this.endpoints.estudiantes, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(studentData)
-            });
-
-            this.log('Respuesta recibida de la API', {
-                status: response.status,
-                statusText: response.statusText,
-                ok: response.ok
-            });
-
+            const response = await fetch(url, defaultOptions);
+            
             if (!response.ok) {
-                const errorData = await response.json();
-                this.log('Error en la respuesta de la API', errorData);
-                throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`);
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
             }
 
-            const responseData = await response.json();
-            this.log('Respuesta exitosa de la API', responseData);
-            return responseData;
-
+            return await response.json();
         } catch (error) {
-            this.log('Error en la API', error);
+            console.error(`Error en petición a ${endpoint}:`, error);
             throw error;
         }
+    }
+
+    /**
+     * Registra un estudiante completo con especialidades y horarios
+     */
+    async registrarEstudiante(data) {
+        return this.request(this.endpoints.registroCompleto, {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
     }
 
     /**
      * Verifica la disponibilidad de un email
      */
-    async checkEmailAvailability(email) {
-        try {
-            const response = await fetch(`${this.endpoints.verificarEmail}/${encodeURIComponent(email)}`);
-            
-            if (!response.ok) {
-                throw new Error(`Error ${response.status}: ${response.statusText}`);
-            }
-
-            return await response.json();
-
-        } catch (error) {
-            this.log('Error verificando email', error);
-            throw error;
-        }
+    async verificarEmail(email) {
+        const encodedEmail = encodeURIComponent(email);
+        return this.request(`${this.endpoints.verificarEmail}/${encodedEmail}`);
     }
 
     /**
      * Obtiene estadísticas del sistema
      */
-    async getStatistics() {
-        try {
-            const response = await fetch(this.endpoints.estadisticas);
-            
-            if (!response.ok) {
-                throw new Error(`Error ${response.status}: ${response.statusText}`);
-            }
-
-            return await response.json();
-
-        } catch (error) {
-            this.log('Error obteniendo estadísticas', error);
-            throw error;
-        }
+    async obtenerEstadisticas() {
+        return this.request(this.endpoints.estadisticas);
     }
 
     /**
-     * Muestra el overlay de carga
+     * Valida la estructura de datos antes del envío
      */
-    showLoading() {
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        if (loadingOverlay) {
-            loadingOverlay.classList.add('show');
+    validateRegistrationData(data) {
+        const errors = [];
+
+        // Validar campos requeridos
+        if (!data.nombre_completo?.trim()) {
+            errors.push('Nombre completo es requerido');
         }
-    }
 
-    /**
-     * Oculta el overlay de carga
-     */
-    hideLoading() {
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        if (loadingOverlay) {
-            loadingOverlay.classList.remove('show');
+        if (!data.email?.trim()) {
+            errors.push('Email es requerido');
         }
-    }
 
-    /**
-     * Muestra el modal de éxito
-     */
-    showSuccess(data) {
-        const modal = document.getElementById('successModal');
-        const studentCode = document.getElementById('studentCode');
-        
-        if (modal && studentCode) {
-            // Ya no mostramos código porque se asignará después
-            studentCode.textContent = 'Se asignará durante el matching';
-            modal.classList.add('show');
-            
-            // Scroll al modal
-            modal.scrollIntoView({ behavior: 'smooth' });
+        if (!data.anio_carrera) {
+            errors.push('Año de carrera es requerido');
         }
-    }
 
-    /**
-     * Muestra el modal de error
-     */
-    showError(message) {
-        this.log('Mostrando error', message);
-        const modal = document.getElementById('errorModal');
-        const errorMessage = document.getElementById('errorMessage');
-        
-        if (modal && errorMessage) {
-            errorMessage.textContent = message;
-            modal.classList.add('show');
-            
-            // Scroll al modal
-            modal.scrollIntoView({ behavior: 'smooth' });
+        if (!data.ciudad) {
+            errors.push('Ciudad es requerida');
         }
-    }
 
-    /**
-     * Resetea el formulario
-     */
-    resetForm() {
-        const form = document.getElementById('registrationForm');
-        if (form) {
-            form.reset();
-            
-            // Limpiar errores
-            if (window.formValidator) {
-                window.formValidator.clearAllErrors();
-            }
-            
-            // Limpiar estado del email
-            this.clearEmailStatus();
-            
-            // Limpiar clases de error
-            const errorFields = form.querySelectorAll('.error');
-            errorFields.forEach(field => field.classList.remove('error'));
-        }
-    }
-
-    /**
-     * Limpia el estado del email
-     */
-    clearEmailStatus() {
-        const emailStatus = document.querySelector('.email-status');
-        if (emailStatus) {
-            emailStatus.textContent = '';
-            emailStatus.className = 'email-status';
-        }
-    }
-
-    /**
-     * Cierra el modal de éxito
-     */
-    closeSuccessModal() {
-        const modal = document.getElementById('successModal');
-        if (modal) {
-            modal.classList.remove('show');
-        }
-    }
-
-    /**
-     * Cierra el modal de error
-     */
-    closeErrorModal() {
-        const modal = document.getElementById('errorModal');
-        if (modal) {
-            modal.classList.remove('show');
-        }
-    }
-
-        // Verificación de conectividad del servidor eliminada
-
-    /**
-     * Logging para debugging
-     */
-    log(message, data = null) {
-        const timestamp = new Date().toISOString();
-        if (data) {
-            console.log(`[${timestamp}] [StudentAPI] ${message}:`, data);
+        // Validar especialidades y horarios
+        if (!data.especialidades_horarios || !Array.isArray(data.especialidades_horarios)) {
+            errors.push('Especialidades y horarios son requeridos');
+        } else if (data.especialidades_horarios.length === 0) {
+            errors.push('Debe especificar al menos una especialidad con horario');
         } else {
-            console.log(`[${timestamp}] [StudentAPI] ${message}`);
+            // Validar cada especialidad
+            data.especialidades_horarios.forEach((esp, index) => {
+                if (!esp.especialidad) {
+                    errors.push(`Especialidad ${index + 1}: nombre de especialidad es requerido`);
+                }
+                if (!esp.clinica) {
+                    errors.push(`Especialidad ${index + 1}: clínica es requerida`);
+                }
+                if (!esp.dia_semana) {
+                    errors.push(`Especialidad ${index + 1}: día de la semana es requerido`);
+                }
+                if (!esp.hora_inicio) {
+                    errors.push(`Especialidad ${index + 1}: hora de inicio es requerida`);
+                }
+                if (!esp.hora_fin) {
+                    errors.push(`Especialidad ${index + 1}: hora de fin es requerida`);
+                }
+                if (!esp.capacidad_pacientes || esp.capacidad_pacientes < 1 || esp.capacidad_pacientes > 5) {
+                    errors.push(`Especialidad ${index + 1}: capacidad debe ser entre 1 y 5 pacientes`);
+                }
+            });
         }
+
+        return {
+            isValid: errors.length === 0,
+            errors
+        };
+    }
+
+    /**
+     * Prepara los datos para el envío
+     */
+    prepareDataForSubmission(formData) {
+        // Asegurar que los datos estén en el formato correcto
+        const preparedData = {
+            nombre_completo: formData.nombre_completo?.trim(),
+            email: formData.email?.trim().toLowerCase(),
+            telefono: formData.telefono?.trim() || null,
+            anio_carrera: formData.anio_carrera,
+            casos_necesarios: parseInt(formData.casos_necesarios) || 10,
+            ciudad: formData.ciudad,
+            especialidades_horarios: formData.especialidades_horarios || []
+        };
+
+        // Validar y limpiar especialidades
+        if (preparedData.especialidades_horarios.length > 0) {
+            preparedData.especialidades_horarios = preparedData.especialidades_horarios.map(esp => ({
+                especialidad: esp.especialidad?.trim(),
+                clinica: esp.clinica?.trim(),
+                dia_semana: esp.dia_semana?.toLowerCase().trim(),
+                hora_inicio: esp.hora_inicio,
+                hora_fin: esp.hora_fin,
+                capacidad_pacientes: parseInt(esp.capacidad_pacientes) || 1
+            }));
+        }
+
+        return preparedData;
+    }
+
+    /**
+     * Maneja errores de la API
+     */
+    handleAPIError(error) {
+        console.error('Error de API:', error);
+
+        // Determinar el tipo de error y retornar mensaje apropiado
+        if (error.name === 'TypeError' && error.message.includes('fetch')) {
+            return 'Error de conexión. Verifica tu conexión a internet e inténtalo nuevamente.';
+        }
+
+        if (error.message.includes('HTTP 400')) {
+            return 'Datos inválidos. Por favor, revisa la información ingresada.';
+        }
+
+        if (error.message.includes('HTTP 409')) {
+            return 'El email ya está registrado en el sistema.';
+        }
+
+        if (error.message.includes('HTTP 500')) {
+            return 'Error interno del servidor. Por favor, inténtalo más tarde.';
+        }
+
+        return error.message || 'Error desconocido. Por favor, inténtalo nuevamente.';
+    }
+
+    /**
+     * Retorna información de la API
+     */
+    getAPIInfo() {
+        return {
+            baseURL: this.baseURL,
+            endpoints: this.endpoints,
+            version: '1.0.0'
+        };
     }
 }
 
-    // Inicializar API cuando el DOM esté listo
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log('🚀 Inicializando StudentAPI...');
-        window.studentAPI = new StudentAPI();
-    });
-
-// Funciones globales para los modales
-function closeSuccessModal() {
-    if (window.studentAPI) {
-        window.studentAPI.closeSuccessModal();
-    }
-}
-
-function closeErrorModal() {
-    if (window.studentAPI) {
-        window.studentAPI.closeErrorModal();
-    }
-}
+// Inicializar cliente API cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', () => {
+    window.apiClient = new APIClient();
+});
 
 // Exportar para uso en otros archivos
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = StudentAPI;
+    module.exports = APIClient;
 }

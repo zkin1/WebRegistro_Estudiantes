@@ -1,10 +1,61 @@
-/* Responsive Design - Estilo Minimalista */
+/* ===============================================
+   SISTEMA DENTAL MATCHING - ESTILOS RESPONSIVOS
+   Diseño adaptativo para todos los dispositivos
+   =============================================== */
 
-/* Mobile First - Dispositivos pequeños */
-@media (max-width: 767.98px) {
+/* Breakpoints principales */
+/* Mobile First: 320px - 480px */
+/* Tablet: 481px - 768px */
+/* Desktop: 769px - 1024px */
+/* Large Desktop: 1025px+ */
+
+/* ===============================================
+   MOBILE FIRST (320px - 480px)
+   =============================================== */
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 var(--spacing-md);
+    }
+    
+    /* Header */
+    .header-content {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        padding: var(--spacing-md) 0;
+    }
+    
+    .logo {
+        font-size: var(--font-size-lg);
+    }
+    
+    .logo i {
+        font-size: var(--font-size-xl);
+    }
+    
+    .nav {
+        gap: var(--spacing-md);
+    }
+    
+    .nav-link {
+        font-size: var(--font-size-sm);
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+    
+    /* Hero Section */
+    .hero {
+        padding: var(--spacing-xl) 0;
+    }
+    
+    .hero-content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+        text-align: center;
+    }
+    
     .hero-title {
-        font-size: var(--font-size-3xl);
-        line-height: 1.2;
+        font-size: var(--font-size-2xl);
+        line-height: 1.3;
     }
     
     .hero-description {
@@ -12,10 +63,381 @@
         line-height: 1.6;
     }
     
+    .hero-features {
+        gap: var(--spacing-sm);
+    }
+    
+    .feature {
+        font-size: var(--font-size-sm);
+        padding: var(--spacing-sm);
+    }
+    
+    .dental-icon {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .dental-icon i {
+        font-size: 60px;
+    }
+    
+    /* Botones */
+    .btn {
+        padding: var(--spacing-sm) var(--spacing-lg);
+        font-size: var(--font-size-sm);
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .btn-large {
+        padding: var(--spacing-md) var(--spacing-lg);
+        font-size: var(--font-size-base);
+    }
+    
+    /* Formulario */
+    .registration {
+        padding: var(--spacing-xl) 0;
+    }
+    
+    .section-header h2 {
+        font-size: var(--font-size-2xl);
+    }
+    
+    .section-header p {
+        font-size: var(--font-size-base);
+    }
+    
+    .form-section {
+        padding: var(--spacing-lg);
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .section-header-inline {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        text-align: center;
+    }
+    
+    .section-header-inline h3 {
+        font-size: var(--font-size-xl);
+    }
+    
+    .progress-bar {
+        width: 100px;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    .form-group label {
+        font-size: var(--font-size-sm);
+    }
+    
+    .form-group input,
+    .form-group select {
+        padding: var(--spacing-sm);
+        font-size: var(--font-size-sm);
+    }
+    
+    /* Especialidades */
+    .especialidades-intro {
+        padding: var(--spacing-md);
+    }
+    
+    .especialidades-intro p {
+        font-size: var(--font-size-sm);
+    }
+    
+    .especialidades-selector h4 {
+        font-size: var(--font-size-base);
+    }
+    
+    .especialidades-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+    
+    .especialidad-checkbox {
+        padding: var(--spacing-sm);
+    }
+    
+    .especialidad-label {
+        font-size: var(--font-size-sm);
+    }
+    
+    /* Especialidades Configuradas */
+    .especialidad-configurada {
+        padding: var(--spacing-md);
+    }
+    
+    .especialidad-header {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        text-align: center;
+    }
+    
+    .especialidad-title {
+        font-size: var(--font-size-base);
+    }
+    
+    .horario-item {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-sm);
+    }
+    
+    .horario-item select,
+    .horario-item input {
+        padding: var(--spacing-sm);
+        font-size: var(--font-size-sm);
+    }
+    
+    /* Botones de acción */
+    .form-actions {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+    
+    .add-especialidad-container {
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    /* Información */
+    .information {
+        padding: var(--spacing-xl) 0;
+    }
+    
+    .steps-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+        margin-top: var(--spacing-lg);
+    }
+    
+    .step {
+        padding: var(--spacing-lg);
+    }
+    
+    .step-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .step-icon i {
+        font-size: 24px;
+    }
+    
+    .step h3 {
+        font-size: var(--font-size-lg);
+    }
+    
+    .step p {
+        font-size: var(--font-size-sm);
+    }
+    
+    /* Footer */
+    .footer {
+        padding: var(--spacing-xl) 0 var(--spacing-md);
+    }
+    
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+        text-align: center;
+    }
+    
+    .footer-section h4 {
+        font-size: var(--font-size-base);
+    }
+    
+    .footer-section p {
+        font-size: var(--font-size-sm);
+    }
+    
+    .social-links {
+        justify-content: center;
+        gap: var(--spacing-lg);
+    }
+    
+    .social-links a {
+        font-size: var(--font-size-lg);
+    }
+    
+    /* Modales */
+    .modal-content {
+        width: 95%;
+        margin: var(--spacing-md);
+    }
+    
+    .modal-header {
+        padding: var(--spacing-lg);
+    }
+    
+    .modal-header h3 {
+        font-size: var(--font-size-xl);
+    }
+    
+    .modal-body {
+        padding: var(--spacing-lg);
+    }
+    
+    .modal-footer {
+        padding: var(--spacing-lg);
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+    
+    .student-code {
+        padding: var(--spacing-md);
+    }
+    
+    .code-display {
+        font-size: var(--font-size-base);
+        padding: var(--spacing-sm);
+    }
+    
+    /* Loading */
+    .loading-spinner {
+        padding: var(--spacing-lg);
+    }
+    
+    .loading-spinner i {
+        font-size: var(--font-size-3xl);
+    }
+    
+    .loading-spinner p {
+        font-size: var(--font-size-base);
+    }
+}
+
+/* ===============================================
+   TABLET (481px - 768px)
+   =============================================== */
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .container {
+        padding: 0 var(--spacing-lg);
+    }
+    
+    /* Header */
+    .header-content {
+        padding: var(--spacing-lg) 0;
+    }
+    
+    .nav {
+        gap: var(--spacing-lg);
+    }
+    
+    /* Hero Section */
+    .hero {
+        padding: var(--spacing-2xl) 0;
+    }
+    
     .hero-content {
         grid-template-columns: 1fr;
+        gap: var(--spacing-xl);
         text-align: center;
+    }
+    
+    .hero-title {
+        font-size: var(--font-size-3xl);
+    }
+    
+    .dental-icon {
+        width: 180px;
+        height: 180px;
+    }
+    
+    .dental-icon i {
+        font-size: 70px;
+    }
+    
+    /* Formulario */
+    .form-section {
+        padding: var(--spacing-xl);
+    }
+    
+    .form-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: var(--spacing-lg);
+    }
+    
+    .especialidades-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+    
+    .horario-item {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    /* Información */
+    .steps-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--spacing-lg);
+    }
+    
+    /* Footer */
+    .footer-content {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--spacing-xl);
+    }
+}
+
+/* ===============================================
+   DESKTOP (769px - 1024px)
+   =============================================== */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .container {
+        padding: 0 var(--spacing-xl);
+    }
+    
+    /* Hero Section */
+    .hero-content {
         gap: var(--spacing-2xl);
+    }
+    
+    .hero-title {
+        font-size: var(--font-size-4xl);
+    }
+    
+    /* Formulario */
+    .form-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    
+    .especialidades-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    
+    .horario-item {
+        grid-template-columns: 1fr 1fr 1fr auto auto;
+    }
+    
+    /* Información */
+    .steps-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+}
+
+/* ===============================================
+   LARGE DESKTOP (1025px+)
+   =============================================== */
+
+@media (min-width: 1025px) {
+    .container {
+        max-width: 1400px;
+    }
+    
+    /* Hero Section */
+    .hero-content {
+        gap: var(--spacing-3xl);
+    }
+    
+    .hero-title {
+        font-size: var(--font-size-4xl);
     }
     
     .dental-icon {
@@ -24,294 +446,278 @@
     }
     
     .dental-icon i {
-        font-size: 4rem;
+        font-size: 90px;
     }
     
-    .btn-large {
-        padding: var(--spacing-lg) var(--spacing-xl);
-        font-size: var(--font-size-base);
-        width: 100%;
+    /* Formulario */
+    .form-grid {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     }
     
-    .nav {
-        gap: var(--spacing-lg);
+    .especialidades-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     }
     
-    .nav-link {
-        padding: var(--spacing-sm) var(--spacing-md);
-        font-size: var(--font-size-sm);
-    }
-    
-    .registration-form {
-        padding: var(--spacing-xl);
-        margin: 0 var(--spacing-md);
-    }
-    
-    .form-section {
-        margin-bottom: var(--spacing-2xl);
-        padding-bottom: var(--spacing-xl);
-    }
-    
-    .form-section h3 {
-        font-size: var(--font-size-lg);
-        padding: var(--spacing-md);
-    }
-    
-    .checkbox-grid {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-sm);
-    }
-    
-    .radio-group {
-        flex-direction: column;
-        gap: var(--spacing-md);
-    }
-    
-    .radio-label,
-    .checkbox-label {
-        padding: var(--spacing-sm) var(--spacing-md);
-        font-size: var(--font-size-sm);
-    }
-    
-    .steps-grid {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-xl);
-    }
-    
-    .step {
-        padding: var(--spacing-xl);
-    }
-    
-    .step-icon {
-        width: 70px;
-        height: 70px;
-    }
-    
-    .step-icon i {
-        font-size: 1.75rem;
-    }
-    
-    .footer-content {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-xl);
-        text-align: center;
-    }
-    
-    .social-links {
-        justify-content: center;
-        gap: var(--spacing-md);
-    }
-    
-    .social-links a {
-        width: 45px;
-        height: 45px;
-    }
-    
-    .university-indicator {
-        top: var(--spacing-md);
-        right: var(--spacing-md);
-        left: var(--spacing-md);
-    }
-    
-    .university-badge {
-        padding: var(--spacing-sm) var(--spacing-md);
-        font-size: var(--font-size-sm);
-    }
-}
-
-/* Tablets */
-@media (min-width: 768px) and (max-width: 991.98px) {
-    .hero-content {
-        grid-template-columns: 1fr;
-        text-align: center;
-        gap: var(--spacing-2xl);
-    }
-    
-    .hero-title {
-        font-size: var(--font-size-4xl);
-    }
-    
-    .dental-icon {
-        width: 250px;
-        height: 250px;
-    }
-    
-    .dental-icon i {
-        font-size: 4.5rem;
-    }
-    
-    .registration-form {
-        padding: var(--spacing-2xl);
-        margin: 0 var(--spacing-lg);
-    }
-    
-    .checkbox-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-    
-    .steps-grid {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    }
-    
-    .footer-content {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-}
-
-/* Desktop pequeño */
-@media (min-width: 992px) and (max-width: 1199.98px) {
-    .hero-content {
-        gap: var(--spacing-2xl);
-    }
-    
-    .registration-form {
-        max-width: 850px;
-    }
-    
+    /* Información */
     .steps-grid {
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     }
 }
 
-/* Desktop grande */
-@media (min-width: 1200px) {
-    .container {
-        max-width: 1400px;
+/* ===============================================
+   ORIENTACIÓN LANDSCAPE EN MÓVILES
+   =============================================== */
+
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero {
+        padding: var(--spacing-lg) 0;
     }
     
     .hero-content {
-        gap: var(--spacing-3xl);
+        gap: var(--spacing-lg);
     }
     
-    .registration-form {
-        max-width: 1000px;
+    .hero-title {
+        font-size: var(--font-size-2xl);
     }
     
-    .steps-grid {
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    .dental-icon {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .dental-icon i {
+        font-size: 50px;
+    }
+    
+    .form-section {
+        padding: var(--spacing-md);
+    }
+    
+    .section-header-inline {
+        flex-direction: row;
+        text-align: left;
     }
 }
 
-/* Accesibilidad - Reducción de movimiento */
+/* ===============================================
+   DISPOSITIVOS DE ALTA DENSIDAD (Retina)
+   =============================================== */
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .dental-icon {
+        border-width: 1px;
+    }
+    
+    .btn {
+        border-width: 1px;
+    }
+    
+    .form-group input,
+    .form-group select {
+        border-width: 1px;
+    }
+}
+
+/* ===============================================
+   DISPOSITIVOS TÁCTILES
+   =============================================== */
+
+@media (hover: none) and (pointer: coarse) {
+    .btn:hover {
+        transform: none;
+        box-shadow: var(--shadow-md);
+    }
+    
+    .especialidad-checkbox:hover {
+        border-color: var(--border-color);
+        background: var(--bg-primary);
+    }
+    
+    .nav-link:hover::after {
+        width: 0;
+    }
+    
+    .step:hover {
+        transform: none;
+        box-shadow: var(--shadow-md);
+    }
+    
+    /* Aumentar área táctil */
+    .btn {
+        min-height: 44px;
+    }
+    
+    .especialidad-checkbox {
+        min-height: 44px;
+    }
+    
+    .remove-especialidad,
+    .remove-horario {
+        min-width: 44px;
+        min-height: 44px;
+    }
+}
+
+/* ===============================================
+   ACCESIBILIDAD Y CONTRASTE
+   =============================================== */
+
 @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
+    * {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
     
-    .hero::after,
-    .dental-icon::before,
-    .dental-icon::after,
-    .feature::before,
-    .form-section h3::before,
-    .step-icon::after,
-    .social-links a::before,
-    .btn::before,
-    .progress-fill::after {
-        animation: none !important;
+    .dental-icon {
+        animation: none;
+    }
+    
+    .btn::before {
+        display: none;
     }
 }
 
-/* Alto contraste */
 @media (prefers-contrast: high) {
     :root {
-        --primary-color: #000080;
-        --secondary-color: #006400;
-        --accent-color: #800080;
-        --gray-200: #c0c0c0;
-        --gray-300: #a0a0a0;
-        --gray-600: #404040;
-        --gray-700: #202020;
+        --border-color: #000000;
+        --text-muted: #000000;
+        --bg-secondary: #ffffff;
+        --bg-tertiary: #f0f0f0;
     }
     
-    .btn,
-    .form-group input,
-    .form-group select {
-        border-width: 3px;
-    }
-    
-    .nav-link::after,
-    .form-section h3 {
-        border-width: 2px;
-    }
-}
-
-/* Modo oscuro */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --white: #1a1a1a;
-        --gray-50: #2a2a2a;
-        --gray-100: #3a3a3a;
-        --gray-200: #4a4a4a;
-        --gray-300: #5a5a5a;
-        --gray-400: #6a6a6a;
-        --gray-500: #7a7a7a;
-        --gray-600: #8a8a8a;
-        --gray-700: #9a9a9a;
-        --gray-800: #aaaaaa;
-        --gray-900: #bababa;
-    }
-    
-    body {
-        background-color: var(--white);
-        color: var(--gray-800);
-    }
-    
-    .header {
-        background-color: rgba(26, 26, 26, 0.98);
-        border-bottom-color: rgba(255, 255, 255, 0.1);
-    }
-    
-    .registration-form,
-    .step {
-        background: var(--gray-50);
-        border-color: var(--gray-200);
-    }
-    
-    .form-section h3 {
-        background: linear-gradient(135deg, var(--gray-100), var(--gray-50));
-    }
-}
-
-/* Dispositivos sin hover */
-@media (any-hover: none) {
-    .btn:hover,
-    .nav-link:hover,
-    .feature:hover,
-    .step:hover,
-    .social-links a:hover,
-    .radio-label:hover,
-    .checkbox-label:hover {
-        transform: none;
-    }
-    
-    .form-group:hover {
-        transform: none;
-    }
-    
-    .form-section:hover h3 {
-        transform: none;
-    }
-}
-
-/* Tamaños mínimos de touch target */
-@media (max-width: 767.98px) {
-    .btn,
-    .nav-link,
-    .radio-label,
-    .checkbox-label,
-    .social-links a {
-        min-height: 44px;
-        min-width: 44px;
+    .btn {
+        border: 2px solid var(--text-primary);
     }
     
     .form-group input,
     .form-group select {
-        min-height: 44px;
+        border: 2px solid var(--text-primary);
     }
 }
 
+/* ===============================================
+   IMPRESIÓN
+   =============================================== */
+
+@media print {
+    .header,
+    .nav,
+    .hero,
+    .information,
+    .footer,
+    .modal,
+    .loading-overlay {
+        display: none !important;
+    }
+    
+    .registration {
+        padding: 0;
+        background: white;
+    }
+    
+    .form-section {
+        box-shadow: none;
+        border: 1px solid #000;
+        margin-bottom: 20px;
+        page-break-inside: avoid;
+    }
+    
+    .btn {
+        display: none !important;
+    }
+    
+    .especialidad-checkbox {
+        border: 1px solid #000;
+        background: white;
+    }
+    
+    .checkbox-custom {
+        border: 1px solid #000;
+        background: white;
+    }
+    
+    .especialidad-checkbox input[type="checkbox"]:checked + .checkbox-custom {
+        background: #000;
+        border-color: #000;
+    }
+    
+    .especialidad-checkbox input[type="checkbox"]:checked + .checkbox-custom::after {
+        color: white;
+    }
 }
+
+/* ===============================================
+   UTILIDADES RESPONSIVAS
+   =============================================== */
+
+/* Ocultar elementos en móvil */
+@media (max-width: 768px) {
+    .hide-mobile {
+        display: none !important;
+    }
+}
+
+/* Ocultar elementos en desktop */
+@media (min-width: 769px) {
+    .hide-desktop {
+        display: none !important;
+    }
+}
+
+/* Mostrar elementos solo en móvil */
+@media (max-width: 768px) {
+    .show-mobile {
+        display: block !important;
+    }
+}
+
+/* Mostrar elementos solo en desktop */
+@media (min-width: 769px) {
+    .show-desktop {
+        display: block !important;
+    }
+}
+
+/* Ajustes de texto responsivo */
+@media (max-width: 480px) {
+    .text-responsive-sm {
+        font-size: var(--font-size-sm);
+    }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .text-responsive-md {
+        font-size: var(--font-size-base);
+    }
+}
+
+@media (min-width: 769px) {
+    .text-responsive-lg {
+        font-size: var(--font-size-lg);
+    }
+}
+
+/* Ajustes de espaciado responsivo */
+@media (max-width: 480px) {
+    .spacing-responsive-sm {
+        padding: var(--spacing-sm);
+        margin: var(--spacing-sm);
+    }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .spacing-responsive-md {
+        padding: var(--spacing-md);
+        margin: var(--spacing-md);
+    }
+}
+
+@media (min-width: 769px) {
+    .spacing-responsive-lg {
+        padding: var(--spacing-lg);
+        margin: var(--spacing-lg);
+    }
+}
+
