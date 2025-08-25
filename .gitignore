@@ -1,0 +1,152 @@
+# 🚫 Archivos y directorios que NO se incluyen en Git
+
+## 📦 Dependencias y módulos
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+## 🔐 Variables de entorno y configuración
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env.example
+config/database.js
+config/*.local.js
+
+## 🗄️ Base de datos
+*.db
+*.sqlite
+*.sqlite3
+database/
+backups/
+*.sql.bak
+
+## 📝 Logs y archivos temporales
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+## 🏗️ Archivos de construcción y distribución
+dist/
+build/
+out/
+.next/
+.nuxt/
+.vuepress/dist
+.serverless/
+.fusebox/
+.dynamodb/
+
+## 🧪 Testing y cobertura
+coverage/
+.nyc_output
+.coverage
+*.lcov
+.nyc_output/
+test-results/
+playwright-report/
+test-results.xml
+
+## 🖥️ Archivos del sistema operativo
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+## 🔧 Archivos de IDE y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+## 📱 Archivos específicos del proyecto
+# Scripts temporales de depuración
+debug-*.js
+test-*.js
+clean-*.js
+fix-*.js
+update-*.js
+
+# Archivos de prueba HTML
+test-*.html
+
+# Archivos de documentación temporal
+*-SOLUCION.md
+*-LIMPEZA.md
+*-DEPURACION.md
+*-FRONTEND.md
+*-CODIGO.md
+
+# Archivos de configuración local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+## 🚀 Archivos de despliegue
+.vercel
+.netlify
+.cache/
+.parcel-cache/
+
+## 📊 Archivos de análisis y métricas
+.bundle-size/
+.webpack-bundle-analyzer-report.html
+
+## 🔒 Archivos de seguridad
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+## 📁 Directorios temporales
+tmp/
+temp/
+.tmp/
+.temp/
+
+## 🎯 Archivos específicos del proyecto dental
+# Archivos de backup de base de datos
+dental_matching_backup.sql
+estudiantes_backup.sql
+
+# Archivos de configuración local
+config/database.local.js
+config/security.local.js
+
+# Archivos de logs específicos
+logs/registration.log
+logs/email.log
+logs/error.log
+
+## 📋 Notas importantes
+# Este .gitignore está configurado para:
+# - Excluir dependencias (node_modules)
+# - Proteger información sensible (.env)
+# - Ignorar archivos temporales y de construcción
+# - Mantener solo el código fuente esencial
+# - Excluir archivos de depuración temporales
+
+# Si necesitas incluir algún archivo específico, usa:
+# !important-file.js
+# !important-config.json

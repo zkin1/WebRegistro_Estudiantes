@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug API - Sistema Dental</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .form-group { margin: 10px 0; }
+        label { display: block; margin-bottom: 5px; }
+        input, select { width: 300px; padding: 8px; }
+        button { padding: 10px 20px; margin: 10px 5px; }
+        .result { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Debug API - Sistema Dental</h1>
+    
+    <div class="form-group">
+        <label>URL de la API:</label>
+        <input type="text" id="apiUrl" value="http://localhost:5000/api/estudiantes" style="width: 400px;">
+    </div>
+
+    <div class="form-group">
+        <label>Nombre Completo:</label>
+        <input type="text" id="nombre" value="Juan Perez">
+    </div>
+
+    <div class="form-group">
+        <label>Email:</label>
+        <input type="email" id="email" value="juan@test.com">
+    </div>
+
+    <div class="form-group">
+        <label>Año de Carrera:</label>
+        <select id="anio_carrera">
+            <option value="4to">4to</option>
+            <option value="5to" selected>5to</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Teléfono:</label>
+        <input type="text" id="telefono" value="+56912345678">
+    </div>
+
+    <div class="form-group">
+        <label>Ciudad:</label>
+        <select id="ciudad">
+            <option value="Metropolitana" selected>Metropolitana</option>
+            <option value="Valparaiso">Valparaiso</option>
+            <option value="Concepcion">Concepcion</option>
+            <option value="Otros">Otros</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Especialidades:</label>
+        <input type="text" id="especialidades" value="Endodoncia,Resina Simple" placeholder="Separadas por comas">
+    </div>
+
+    <div class="form-group">
+        <label>Días Disponibles:</label>
+        <input type="text" id="dias_disponibles" value="Lunes,Martes" placeholder="Separados por comas">
+    </div>
+
+    <div class="form-group">
+        <label>Horarios Disponibles:</label>
+        <input type="text" id="horarios_disponibles" value="Manana,Tarde" placeholder="Separados por comas">
+    </div>
+
+    <div class="form-group">
+        <button onclick="testConnection()">🔌 Probar Conexión</button>
+        <button onclick="sendData()">📤 Enviar Datos</button>
+        <button onclick="clearResult()">🗑️ Limpiar</button>
+    </div>
+
+    <div id="result" class="result" style="display: none;"></div>
+
+    <script>
+        async function testConnection() {
+            const url = document.getElementById('apiUrl').value;
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                console.log('🧪 Probando conexión a:', url);
+                const response = await fetch(url.replace('/api/estudiantes', '/health'));
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    showResult('✅ Conexión exitosa', data, 'success');
+                    console.log('✅ Servidor funcionando:', data);
+                } else {
+                    showResult('❌ Error del servidor', { status: response.status, statusText: response.statusText }, 'error');
+                    console.log('❌ Servidor respondió con error:', response.status);
+                }
+            } catch (error) {
+                showResult('❌ Error de conexión', { error: error.message }, 'error');
+                console.error('❌ Error de conexión:', error);
+            }
+        }
+
+        async function sendData() {
+            const url = document.getElementById('apiUrl').value;
+            const resultDiv = document.getElementById('result');
+            
+            // Recopilar datos del formulario
+            const data = {
+                nombre_completo: document.getElementById('nombre').value,
+                email: document.getElementById('email').value,
+                anio_carrera: document.getElementById('anio_carrera').value,
+                telefono: document.getElementById('telefono').value,
+                ciudad: document.getElementById('ciudad').value,
+                especialidades: document.getElementById('especialidades').value.split(',').map(s => s.trim()),
+                dias_disponibles: document.getElementById('dias_disponibles').value.split(',').map(s => s.trim()),
+                horarios_disponibles: document.getElementById('horarios_disponibles').value.split(',').map(s => s.trim())
+            };
+
+            console.log('📤 Enviando datos:', data);
+            console.log('📤 URL:', url);
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                console.log('📥 Respuesta recibida:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    ok: response.ok
+                });
+
+                if (response.ok) {
+                    const responseData = await response.json();
+                    showResult('✅ Registro exitoso', responseData, 'success');
+                    console.log('✅ Respuesta exitosa:', responseData);
+                } else {
+                    const errorData = await response.json();
+                    showResult('❌ Error en el registro', errorData, 'error');
+                    console.log('❌ Error en la respuesta:', errorData);
+                }
+            } catch (error) {
+                showResult('❌ Error de conexión', { error: error.message }, 'error');
+                console.error('❌ Error durante el envío:', error);
+            }
+        }
+
+        function showResult(title, data, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = `result ${type}`;
+            resultDiv.innerHTML = `
+                <h3>${title}</h3>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+            `;
+        }
+
+        function clearResult() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'none';
+            resultDiv.innerHTML = '';
+        }
+
+        // Auto-completar con datos de prueba
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Debug page cargada');
+        });
+    </script>
+</body>
+</html>

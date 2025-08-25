@@ -1,0 +1,61 @@
+# 🚫 Backend - Archivos que NO se incluyen en Git
+
+## 📦 Dependencias
+node_modules/
+package-lock.json
+yarn.lock
+
+## 🔐 Configuración y variables de entorno
+.env
+.env.*
+config/database.js
+config/security.js
+config/*.local.js
+
+## 🗄️ Base de datos
+*.db
+*.sqlite
+*.sqlite3
+database/
+backups/
+*.sql.bak
+dental_matching_backup.sql
+
+## 📝 Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+## 🧪 Testing y scripts temporales
+test-*.js
+debug-*.js
+clean-*.js
+fix-*.js
+update-*.js
+
+## 🔒 Archivos de seguridad
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+## 📁 Directorios temporales
+tmp/
+temp/
+.tmp/
+.temp/
+
+## 🖥️ Archivos del sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+## 🔧 Archivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

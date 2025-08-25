@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Estudiantes de Odontología - Sistema de Matching Dental</title>
+    <meta name="description" content="Regístrate como estudiante de odontología para participar en el sistema de matching con pacientes">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-tooth"></i>
+                    <span>Sistema Dental</span>
+                </div>
+                <nav class="nav">
+                    <a href="#inicio" class="nav-link">Inicio</a>
+                    <a href="#registro" class="nav-link">Registro</a>
+                    <a href="#informacion" class="nav-link">Información</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        Únete al Sistema de <span class="highlight">Matching Dental</span>
+                    </h1>
+                    <p class="hero-description">
+                        Como estudiante de odontología, conéctate con pacientes que necesitan atención dental. 
+                        Completa tu perfil y comienza a recibir casos clínicos que se ajusten a tu especialidad y disponibilidad.
+                    </p>
+                    <div class="hero-features">
+                        <div class="feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Registro gratuito y rápido</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Matching automático con pacientes</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Experiencia clínica real</span>
+                        </div>
+                    </div>
+                    <a href="#registro" class="btn btn-primary btn-large">
+                        <i class="fas fa-user-plus"></i>
+                        Registrarse Ahora
+                    </a>
+                </div>
+                <div class="hero-image">
+                    <div class="dental-icon">
+                        <i class="fas fa-tooth"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registration Form Section -->
+    <section id="registro" class="registration">
+        <div class="container">
+            <div class="section-header">
+                <h2>Formulario de Registro</h2>
+                <p>Completa tu información para unirte al sistema de matching dental</p>
+            </div>
+            
+            <form id="registrationForm" class="registration-form">
+                <!-- Información Personal -->
+                <div class="form-section">
+                    <h3><i class="fas fa-user"></i> Información Personal</h3>
+                    
+                    <div class="form-group">
+                        <label for="nombre_completo">Nombre Completo *</label>
+                        <input type="text" id="nombre_completo" name="nombre_completo" required>
+                        <span class="error-message"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required>
+                        <span class="error-message"></span>
+                        <div class="email-status"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telefono">Teléfono (Opcional)</label>
+                        <input type="tel" id="telefono" name="telefono" placeholder="+56912345678">
+                        <span class="error-message"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ciudad">Ciudad de Residencia *</label>
+                        <select id="ciudad" name="ciudad" required>
+                            <option value="">Selecciona una ciudad</option>
+                            <option value="Metropolitana">Metropolitana</option>
+                            <option value="Valparaíso">Valparaíso</option>
+                            <option value="Concepción">Concepción</option>
+                            <option value="Otros">Otros</option>
+                        </select>
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+
+                <!-- Información Académica -->
+                <div class="form-section">
+                    <h3><i class="fas fa-graduation-cap"></i> Información Académica</h3>
+                    
+                    <div class="form-group">
+                        <label for="universidad">Universidad (Opcional)</label>
+                        <select id="universidad" name="universidad">
+                            <option value="">Selecciona tu universidad</option>
+                            <option value="Universidad de Chile">Universidad de Chile</option>
+                            <option value="Universidad de Valparaíso">Universidad de Valparaíso</option>
+                            <option value="Universidad de Concepción">Universidad de Concepción</option>
+                        </select>
+                        <span class="error-message"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Año de Carrera *</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="anio_carrera" value="4to" required>
+                                <span class="radio-custom"></span>
+                                4to Año
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="anio_carrera" value="5to" required>
+                                <span class="radio-custom"></span>
+                                5to Año
+                            </label>
+                        </div>
+                        <span class="error-message"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Especialidades *</label>
+                        <div class="checkbox-grid">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="especialidades" value="Endodoncia">
+                                <span class="checkbox-custom"></span>
+                                Endodoncia
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="especialidades" value="Resina Simple">
+                                <span class="checkbox-custom"></span>
+                                Resina Simple
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="especialidades" value="Resina Compuesta">
+                                <span class="checkbox-custom"></span>
+                                Resina Compuesta
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="especialidades" value="Corona">
+                                <span class="checkbox-custom"></span>
+                                Corona
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="especialidades" value="Exodoncia Simple">
+                                <span class="checkbox-custom"></span>
+                                Exodoncia Simple
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="especialidades" value="Incrustación">
+                                <span class="checkbox-custom"></span>
+                                Incrustación
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="especialidades" value="Prótesis">
+                                <span class="checkbox-custom"></span>
+                                Prótesis
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="especialidades" value="Destartraje">
+                                <span class="checkbox-custom"></span>
+                                Destartraje
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="especialidades" value="Pulido Radicular">
+                                <span class="checkbox-custom"></span>
+                                Pulido Radicular
+                            </label>
+                        </div>
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+
+                <!-- Disponibilidad -->
+                <div class="form-section">
+                    <h3><i class="fas fa-calendar-alt"></i> Disponibilidad</h3>
+                    
+                    <div class="form-group">
+                        <label>Días Disponibles *</label>
+                        <div class="checkbox-grid">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="dias_disponibles" value="Lunes">
+                                <span class="checkbox-custom"></span>
+                                Lunes
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="dias_disponibles" value="Martes">
+                                <span class="checkbox-custom"></span>
+                                Martes
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="dias_disponibles" value="Miércoles">
+                                <span class="checkbox-custom"></span>
+                                Miércoles
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="dias_disponibles" value="Jueves">
+                                <span class="checkbox-custom"></span>
+                                Jueves
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="dias_disponibles" value="Viernes">
+                                <span class="checkbox-custom"></span>
+                                Viernes
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="dias_disponibles" value="Sábado">
+                                <span class="checkbox-custom"></span>
+                                Sábado
+                            </label>
+                        </div>
+                        <span class="error-message"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Horarios Disponibles *</label>
+                        <div class="checkbox-grid">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="horarios_disponibles" value="Manana">
+                                <span class="checkbox-custom"></span>
+                                Mañana (8:00 AM - 12:00 PM)
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="horarios_disponibles" value="Tarde">
+                                <span class="checkbox-custom"></span>
+                                Tarde (12:00 PM - 8:00 PM)
+                            </label>
+                        </div>
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-large" id="submitBtn">
+                        <i class="fas fa-paper-plane"></i>
+                        Completar Registro
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Information Section -->
+    <section id="informacion" class="information">
+        <div class="container">
+            <div class="section-header">
+                <h2>¿Cómo Funciona?</h2>
+                <p>Conoce el proceso completo del sistema de matching dental</p>
+            </div>
+            
+            <div class="steps-grid">
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h3>1. Registro</h3>
+                    <p>Completa tu perfil con información académica y disponibilidad</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>2. Matching</h3>
+                    <p>Nuestro sistema encuentra pacientes que coincidan con tu perfil</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>3. Conexión</h3>
+                    <p>Te conectamos con pacientes para coordinar la atención</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>4. Experiencia</h3>
+                    <p>Gana experiencia clínica real y construye tu portafolio</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Sistema Dental</h4>
+                    <p>Conectando estudiantes de odontología con pacientes que necesitan atención dental</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <p><i class="fas fa-envelope"></i> info@sistemadental.cl</p>
+                    <p><i class="fas fa-phone"></i> +56 9 1234 5678</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Síguenos</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Sistema Dental. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fas fa-check-circle success-icon"></i>
+                <h3>¡Registro Exitoso!</h3>
+            </div>
+            <div class="modal-body">
+                <p>Tu registro ha sido completado exitosamente. Ya eres parte del sistema de matching dental.</p>
+                <div class="student-code">
+                    <strong>Tu código de estudiante:</strong>
+                    <span id="studentCode" class="code-display">Se asignará durante el matching</span>
+                </div>
+                <p class="next-steps">El código se te asignará automáticamente cuando se realice el matching con pacientes. Recibirás un email con más información sobre el programa.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeSuccessModal()">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fas fa-exclamation-circle error-icon"></i>
+                <h3>Error en el Registro</h3>
+            </div>
+            <div class="modal-body">
+                <p id="errorMessage">Ha ocurrido un error durante el registro. Por favor, inténtalo nuevamente.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeErrorModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Procesando registro...</p>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/validation.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
