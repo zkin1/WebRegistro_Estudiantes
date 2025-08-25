@@ -652,6 +652,8 @@ class DentalRegistrationSystem {
         
         if (data.codigo_estudiante) {
             studentCode.textContent = data.codigo_estudiante;
+        } else {
+            studentCode.textContent = 'Se asignará desde otra API';
         }
         
         modal.classList.add('show');

@@ -258,12 +258,9 @@ router.post('/registro-completo', async (req, res) => {
     // Iniciar transacción
     await connection.beginTransaction();
 
-    // 1. Crear estudiante básico
-    const codigo_estudiante = await generateUniqueStudentCode();
-    
+    // 1. Crear estudiante básico (SIN código - se asignará desde otra API)
     const [estudianteResult] = await connection.execute(`
       INSERT INTO estudiantes_odontologia (
-        codigo_estudiante, 
         nombre_completo, 
         año_carrera, 
         telefono, 
@@ -274,9 +271,8 @@ router.post('/registro-completo', async (req, res) => {
         casos_activos,
         casos_completados,
         fecha_registro
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
     `, [
-      codigo_estudiante,
       nombre_completo,
       año_carrera,
       telefono || null,
@@ -355,7 +351,7 @@ router.post('/registro-completo', async (req, res) => {
           activo,
           fecha_creacion
         ) VALUES (?, ?, ?, ?, ?, ?, ?, TRUE, NOW())
-      `, [
+        `, [
         estudianteId,
         especialidad,
         clinica,
@@ -374,7 +370,7 @@ router.post('/registro-completo', async (req, res) => {
       SELECT 
         e.*,
         GROUP_CONCAT(
-          CONCAT(ee.especialidad, ' (', ee.clinica, ') - ', ee.dia_semana, ' ', ee.hora_inicio, '-', ee.hora_fin)
+          CONCAT(ee.especialidad, ' (ee.clinica, ') - ', ee.dia_semana, ' ', ee.hora_inicio, '-', ee.hora_fin)
           SEPARATOR '; '
         ) as especialidades_detalle
       FROM estudiantes_odontologia e
@@ -385,11 +381,12 @@ router.post('/registro-completo', async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: 'Estudiante registrado exitosamente con especialidades y horarios',
+      message: 'Estudiante registrado exitosamente con especialidades y horarios. El código se asignará desde otra API.',
       data: {
         estudiante: estudianteCompleto[0],
         especialidades_registradas: especialidades_horarios.length,
-        codigo_estudiante: codigo_estudiante
+        codigo_estudiante: null, // Se asignará desde otra API
+        nota: 'El código de estudiante se asignará desde otra API durante el proceso de matching'
       }
     });
 
@@ -415,40 +412,6 @@ router.post('/registro-completo', async (req, res) => {
   }
 });
 
-// Función auxiliar para generar código único de estudiante
-async function generateUniqueStudentCode() {
-  const db = await pool.getConnection();
-  try {
-    let codigo;
-    let isUnique = false;
-    let attempts = 0;
-    const maxAttempts = 10;
 
-    while (!isUnique && attempts < maxAttempts) {
-      // Generar código: DENT + 6 dígitos aleatorios
-      const randomNum = Math.floor(Math.random() * 900000) + 100000;
-      codigo = `DENT${randomNum}`;
-
-      // Verificar si ya existe
-      const [existing] = await db.execute(
-        'SELECT id FROM estudiantes_odontologia WHERE codigo_estudiante = ?',
-        [codigo]
-      );
-
-      if (existing.length === 0) {
-        isUnique = true;
-      }
-      attempts++;
-    }
-
-    if (!isUnique) {
-      throw new Error('No se pudo generar un código único después de múltiples intentos');
-    }
-
-    return codigo;
-  } finally {
-    db.release();
-  }
-}
 
 module.exports = router;

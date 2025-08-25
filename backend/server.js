@@ -58,13 +58,15 @@ app.get('/api', (req, res) => {
     success: true,
     message: 'API de Registro de Estudiantes de Odontología',
     version: '1.0.0',
+    description: 'Esta API se encarga únicamente del registro de estudiantes. La asignación de códigos se realiza desde otra API separada.',
     endpoints: {
-      'POST /api/estudiantes': 'Registrar nuevo estudiante (formato antiguo)',
+      'POST /api/estudiantes': 'Registrar nuevo estudiante (formato básico)',
       'POST /api/estudiantes/registro-completo': 'Registrar estudiante con especialidades y horarios',
       'GET /api/estudiantes/verificar-email/:email': 'Verificar disponibilidad de email',
       'GET /api/estudiantes/estadisticas': 'Obtener estadísticas del sistema',
       'GET /health': 'Estado del servidor'
-    }
+    },
+    nota: 'Los códigos de estudiante se asignan desde otra API durante el proceso de matching'
   });
 });
 
@@ -73,7 +75,7 @@ app.use('*', (req, res) => {
   res.status(404).json({
     success: false,
     message: 'Ruta no encontrada',
-    path: req.orig1alUrl
+    path: req.originalUrl
   });
 });
 
@@ -133,7 +135,7 @@ async function startServer() {
       console.log(`📍 Puerto: ${PORT}`);
       console.log(`🌐 URL: http://localhost:${PORT}`);
       console.log(`📊 Health Check: http://localhost:${PORT}/health`);
-      console.log('✅ API lista para recibir registros de estudiantes');
+      console.log('✅ API de registro lista para recibir estudiantes (sin generación de códigos)');
       
       // Abrir navegador automáticamente
       const url = `http://localhost:${PORT}`;
